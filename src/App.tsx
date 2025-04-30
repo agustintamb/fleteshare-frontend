@@ -3,13 +3,15 @@ import reactLogo from './assets/react.svg';
 import viteLogo from '/vite.svg';
 import './App.css';
 
+const VITE_API_URL = import.meta.env.VITE_API_URL;
+
 function App() {
   const [count, setCount] = useState(0);
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/health')
+    fetch(`${VITE_API_URL}/health`)
       .then(response => response.json())
-      .then(data => console.log(data));
+      .then(data => console.log('Main app connected to backend', data));
   }, []);
 
   return (

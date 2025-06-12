@@ -21,7 +21,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       iconPosition = 'left',
       className = '',
       id,
-      placeholder = '',
       required = false,
       ...props
     },
@@ -70,7 +69,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             {...props}
           />
 
-          {placeholder === '••••••••' && (
+          {props.placeholder === '••••••••' && (
             <div className="absolute inset-y-0 right-0 pr-3 flex items-center">
               <button
                 type="button"

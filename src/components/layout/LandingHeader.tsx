@@ -13,7 +13,7 @@ const LandingHeader = () => {
 
   return (
     <header className="bg-gray-50 fixed top-0 left-0 w-full z-50">
-      <nav className=" mx-auto px-4 sm:px-6 py-4">
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <a href="#" className="flex items-center text-primary-600 font-semibold gap-2">

@@ -68,7 +68,7 @@ const RecoverPassword = () => {
             Si no recibís el correo, revisá tu carpeta de spam.
           </p>
           <Button
-            variant="ghost"
+            variant="outline"
             fullWidth
             onClick={handleGoToLogin}
           >

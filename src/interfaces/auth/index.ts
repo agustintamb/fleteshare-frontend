@@ -9,6 +9,9 @@ export interface ILoginParams {
 export interface ILoginResponse {
   message: string;
   result: {
+    id: string;
+    username: string;
+    role: UserRole;
     token: string;
   };
 }

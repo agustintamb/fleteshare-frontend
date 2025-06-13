@@ -1,9 +1,11 @@
 import axios, { AxiosResponse } from 'axios';
+import store from '@/app/store';
+import { getToken } from '@/utils/storage';
+import { setIsSessionExpired } from '@/features/auth/slice';
 import { VITE_API_URL } from '@/utils/constants';
 
 export default abstract class ServiceBase {
   protected readonly client;
-  private isLoggedOut = false;
 
   constructor() {
     this.client = axios.create({
@@ -16,30 +18,20 @@ export default abstract class ServiceBase {
     this.setupInterceptors();
   }
 
-  private getToken(): string {
-    return localStorage.getItem('token') || '';
+
+  private handleSessionExpired() {
+    store.dispatch(setIsSessionExpired(true));
   }
 
   private clearSession = () => {
-    if (this.isLoggedOut) return;
-    this.isLoggedOut = true;
-
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-
-    // Disparar evento personalizado para que el store reaccione
-    window.dispatchEvent(new CustomEvent('session-expired'));
-
-    // Redirect después de un pequeño delay para permitir que el store se actualice
-    setTimeout(() => {
-      window.location.href = '/login';
-      this.isLoggedOut = false;
-    }, 100);
+    this.handleSessionExpired();
   };
 
   private setupInterceptors() {
     this.client.interceptors.request.use(config => {
-      config.headers!.Authorization = 'Bearer ' + this.getToken();
+      config.headers!.Authorization = 'Bearer ' + getToken();
       return config;
     });
 
@@ -64,7 +56,6 @@ export default abstract class ServiceBase {
           const isLoginPage = location.pathname === '/login';
 
           if (!isLoginPage && shouldLogout) {
-            console.log('🔒 Sesión expirada o inválida. Cerrando sesión...');
             this.clearSession();
           }
         }

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Truck, Package, Star, MessageSquare, Award, TrendingUp } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
 
 const fadeIn = {
@@ -23,6 +24,7 @@ const staggerContainer = {
 };
 
 const Home = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="space-y-0 pb-12">
       {/* Hero Section */}
@@ -44,7 +46,7 @@ const Home = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <>
-                  <Link to="/login">
+                  <Link to={isAuthenticated ? '/dashboard' : '/login'}>
                     <Button size="lg" variant="primary" icon={<Truck size={20} />}>
                       Comenzar ahora
                     </Button>

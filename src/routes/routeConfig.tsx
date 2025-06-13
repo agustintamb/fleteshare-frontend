@@ -1,77 +1,47 @@
-//import React, { Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 
 // Layouts
 import MainLayout from '@/layouts/MainLayout';
-import AuthLayout from '@/layouts/AuthLayout';
 
 // Guards
-import { PrivateRoute, PublicOnlyRoute } from '@/components/RouteGuards';
+import PrivateRoute from '@/components/guards/PrivateRoute';
 
 // Eager loaded pages
 import Home from '@/pages/Home';
-import Login from '@/pages/auth/Login';
-import Register from '@/pages/auth/Register';
-import RecoverPassword from '@/pages/auth/RecoverPassword';
 import NotFound from '@/pages/NotFound';
-import Terms from '@/pages/Terms';
-import Privacy from '@/pages/Privacy';
-//import LoadingSpinner from '@/components/ui/LoadingSpinner';
+import Dashboard from '@/pages/Dashboard';
 
-// Lazy loaded pages
-//const Dashboard = React.lazy(() => import('@/pages/Dashboard'));
-//const FreightRequests = React.lazy(() => import('@/pages/freight/FreightRequests'));
-//const FreightDetails = React.lazy(() => import('@/pages/freight/FreightDetails'));
-//const NewFreightRequest = React.lazy(() => import('@/pages/freight/NewFreightRequest'));
-//const Profile = React.lazy(() => import('@/pages/Profile'));
-//const Chat = React.lazy(() => import('@/pages/Chat'));
+import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
-//const withSuspense = (Component: React.ComponentType) => (
-//  <Suspense fallback={<LoadingSpinner />}>
-//    <Component />
-//  </Suspense>
-//);
+const withSuspense = (Component: React.ComponentType) => (
+  <Suspense fallback={<LoadingSpinner />}>
+    <Component />
+  </Suspense>
+);
 
 export const routeConfig: RouteObject[] = [
-  // Public routes
+  // Public routes - Landing with auth modals
   {
     path: '/',
     element: <MainLayout isLanding />,
     children: [
-      { index: true, element: <Home /> },
-      { path: 'terms', element: <Terms /> },
-      { path: 'privacy', element: <Privacy /> },
-    ],
-  },
-
-  // Auth routes
-  {
-    path: '/',
-    element: <AuthLayout />,
-    children: [
+      {
+        index: true,
+        element: <Home />,
+      },
+      // Auth routes as modals over landing
       {
         path: 'login',
-        element: (
-          <PublicOnlyRoute>
-            <Login />
-          </PublicOnlyRoute>
-        ),
+        element: <Home authModal="login" />,
       },
       {
         path: 'register',
-        element: (
-          <PublicOnlyRoute>
-            <Register />
-          </PublicOnlyRoute>
-        ),
+        element: <Home authModal="register" />,
       },
       {
         path: 'recover-password',
-        element: (
-          <PublicOnlyRoute>
-            <RecoverPassword />
-          </PublicOnlyRoute>
-        ),
+        element: <Home authModal="recover" />,
       },
     ],
   },
@@ -85,7 +55,7 @@ export const routeConfig: RouteObject[] = [
       </PrivateRoute>
     ),
     children: [
-      //{ path: 'dashboard', element: withSuspense(Dashboard) },
+      { path: 'dashboard', element: withSuspense(Dashboard) },
       //{ path: 'profile', element: withSuspense(Profile) },
       //{ path: 'chat/:id', element: withSuspense(Chat) },
       //{

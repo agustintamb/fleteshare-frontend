@@ -1,20 +1,25 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { RootState } from '@/app/store';
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IBaseSlice } from '@/interfaces/redux';
+import { ILoginResponse } from '@/interfaces/auth';
 import { errorMessage } from '@/utils/errorMessage';
 import { login, recoverPassword, register } from './asyncActions';
 
 interface initialStateProps extends IBaseSlice {
   registerData: any | null;
   recoverSent: boolean;
+  user: null;
+  isSessionExpired: boolean;
 }
 
 const initialState: initialStateProps = {
+  error: null,
+  isLoading: false,
   registerData: null,
   recoverSent: false,
-  isLoading: false,
-  error: null,
+  user: null,
+  isSessionExpired: false,
 };
 
 export const authSlice = createSlice({
@@ -29,6 +34,11 @@ export const authSlice = createSlice({
       state.recoverSent = false;
       state.isLoading = false;
       state.error = null;
+      state.user = null;
+      state.isSessionExpired = false;
+    },
+    setIsSessionExpired: (state: initialStateProps, action: PayloadAction<boolean>) => {
+      state.isSessionExpired = action.payload;
     },
   },
   extraReducers(builder) {
@@ -37,9 +47,14 @@ export const authSlice = createSlice({
         state.isLoading = true;
         state.error = null;
       })
-      .addCase(login.fulfilled, state => {
+      .addCase(login.fulfilled, (state, action: PayloadAction<ILoginResponse>) => {
         state.isLoading = false;
         state.error = null;
+        state.registerData = null;
+        state.recoverSent = false;
+        state.isSessionExpired = false;
+        const { token } = action.payload.result;
+        if (typeof window !== 'undefined') localStorage.setItem('token', token);
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;
@@ -74,7 +89,7 @@ export const authSlice = createSlice({
   },
 });
 
-export const { clearError, clearAuth } = authSlice.actions;
+export const { clearError, clearAuth, setIsSessionExpired } = authSlice.actions;
 
 export const selectorAuth = (state: RootState) => state.auth;
 

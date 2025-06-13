@@ -1,9 +1,13 @@
 import { TypedUseSelectorHook, useSelector } from 'react-redux';
 import { combineReducers, configureStore } from '@reduxjs/toolkit';
 import auth from '@/features/auth';
+import user from '@/features/user';
+import layout from '@/features/layout';
 
 export const reducer = combineReducers({
   auth,
+  user,
+  layout,
 });
 
 const store = configureStore({

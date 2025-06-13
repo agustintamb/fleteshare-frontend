@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Truck, Menu, X, Bell, User } from 'lucide-react';
+import { Truck, Bell, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -18,7 +18,6 @@ const mockNotifications: Notification[] = [
 ];
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const { isAuthenticated, handleLogout } = useAuth();
   const location = useLocation();
@@ -27,7 +26,6 @@ const Header = () => {
 
   // Close menus when route changes
   useEffect(() => {
-    setIsMenuOpen(false);
     setIsProfileOpen(false);
   }, [location.pathname]);
 
@@ -36,7 +34,7 @@ const Header = () => {
 
   return (
     <header className="bg-gray-50 fixed top-0 left-0 w-full z-50">
-      <nav className=" mx-auto px-4 sm:px-6 py-4">
+      <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           {/* Logo */}
           <Link to="/" className="flex items-center text-primary-600 font-semibold gap-2">
@@ -46,15 +44,6 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {/*<Link to="/" className="text-gray-700 hover:text-primary-600 transition">
-              Inicio
-            </Link>
-            <Link to="/faq" className="text-gray-700 hover:text-primary-600 transition">
-              Preguntas Frecuentes
-            </Link>
-            <Link to="/support" className="text-gray-700 hover:text-primary-600 transition">
-              Soporte
-            </Link>*/}
             {isAuthenticated && (
               <Link
                 to="/notifications"
@@ -139,8 +128,8 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            {isAuthenticated && (
+          {isAuthenticated && (
+            <div className="md:hidden flex items-center">
               <div className="relative mr-4">
                 <Link to="/notifications" className="text-gray-500 hover:text-primary-600">
                   <Bell size={24} />
@@ -151,80 +140,9 @@ const Header = () => {
                   )}
                 </Link>
               </div>
-            )}
-            <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-500 hover:text-primary-600 focus:outline-none"
-            >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.2 }}
-              className="md:hidden mt-4 py-2"
-            >
-              <div className="flex flex-col space-y-4">
-                <Link to="/" className="text-gray-700 hover:text-primary-600 py-2 transition">
-                  Inicio
-                </Link>
-                <Link to="/faq" className="text-gray-700 hover:text-primary-600 py-2 transition">
-                  Preguntas Frecuentes
-                </Link>
-                <Link
-                  to="/support"
-                  className="text-gray-700 hover:text-primary-600 py-2 transition"
-                >
-                  Soporte
-                </Link>
-                {isAuthenticated ? (
-                  <>
-                    <Link
-                      to="/dashboard"
-                      className="text-gray-700 hover:text-primary-600 py-2 transition"
-                    >
-                      Dashboard
-                    </Link>
-                    <Link
-                      to="/notifications"
-                      className="text-gray-700 hover:text-primary-600 py-2 transition flex items-center gap-2"
-                    >
-                      <Bell size={18} /> Notificaciones
-                    </Link>
-                    <Link
-                      to="/profile"
-                      className="text-gray-700 hover:text-primary-600 py-2 transition"
-                    >
-                      Mi Perfil
-                    </Link>
-                    <button
-                      onClick={handleLogout}
-                      className="text-left text-gray-700 hover:text-primary-600 py-2 transition"
-                    >
-                      Cerrar Sesión
-                    </button>
-                  </>
-                ) : (
-                  <div className="flex flex-col space-y-2">
-                    <Link
-                      to="/login"
-                      className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 text-center transition shadow-sm"
-                    >
-                      Iniciar Sesión
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
       </nav>
     </header>
   );

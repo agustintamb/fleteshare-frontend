@@ -12,8 +12,7 @@ const Register = () => {
   return (
     <div>
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Crear Cuenta</h2>
-        <p className="mt-2 text-gray-600">Comenzá a usar FleteShare</p>
+        <p className="text-gray-600">Comenzá a usar FleteShare</p>
       </div>
 
       {error && (

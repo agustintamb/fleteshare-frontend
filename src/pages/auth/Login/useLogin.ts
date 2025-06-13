@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/app/store';
 import { useAuth } from '@/hooks/useAuth';
-import { clearError, selectorAuth } from '@/features/auth/slice';
 import { login } from '@/features/auth/asyncActions';
+import { clearError, selectorAuth } from '@/features/auth/slice';
 
 export const useLogin = () => {
   const navigate = useNavigate();
@@ -37,9 +37,7 @@ export const useLogin = () => {
   };
 
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate('/dashboard');
-    }
+    if (isAuthenticated) navigate('/dashboard');
   }, [isAuthenticated, navigate]);
 
   useEffect(() => {

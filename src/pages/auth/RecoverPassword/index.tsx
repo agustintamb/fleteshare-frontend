@@ -1,19 +1,22 @@
 import { Form, Formik } from 'formik';
 import { Mail } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { validationSchema } from './schema';
 import { useRecoverPassword } from './useRecoverPassword';
 
 const RecoverPassword = () => {
-  const { recoverSent, initialValues, isLoading, error, handleRecoverPassword, handleGoToLogin } =
+  const { recoverSent, initialValues, isLoading, error, handleRecoverPassword } =
     useRecoverPassword();
+
   return (
-    <div className="max-w-sm">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Restablecer Contraseña</h2>
-        <p className="mt-2 text-gray-600">Ingresá tu correo para recibir instrucciones.</p>
-      </div>
+    <div>
+      {!recoverSent && (
+        <div className="text-center mb-6">
+          <p className="text-gray-600">Ingresá tu correo para recibir instrucciones.</p>
+        </div>
+      )}
 
       {error && (
         <div className="text-center mb-4 p-3 bg-error-50 text-error-800 rounded-md">{error}</div>
@@ -62,18 +65,28 @@ const RecoverPassword = () => {
           )}
         </Formik>
       )}
+
       {recoverSent && (
         <div className="text-center mt-4">
           <p className="text-sm text-center text-gray-500 mb-4">
             Si no recibís el correo, revisá tu carpeta de spam.
           </p>
-          <Button
-            variant="outline"
-            fullWidth
-            onClick={handleGoToLogin}
-          >
-            Volver al inicio de sesión
-          </Button>
+          <Link to="/login">
+            <Button variant="outline" fullWidth>
+              Volver al inicio de sesión
+            </Button>
+          </Link>
+        </div>
+      )}
+
+      {!recoverSent && (
+        <div className="mt-6 text-center">
+          <p className="text-sm text-gray-600">
+            ¿Recordaste tu contraseña?{' '}
+            <Link to="/login" className="text-primary-600 hover:text-primary-500 font-medium">
+              Inicia sesión
+            </Link>
+          </p>
         </div>
       )}
     </div>

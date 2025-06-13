@@ -3,20 +3,14 @@ import { RouteObject } from 'react-router-dom';
 
 // Layouts
 import MainLayout from '@/layouts/MainLayout';
-import AuthLayout from '@/layouts/AuthLayout';
 
 // Guards
 import PrivateRoute from '@/components/guards/PrivateRoute';
-import PublicOnlyRoute from '@/components/guards/PublicOnlyRoute';
 
 // Eager loaded pages
 import Home from '@/pages/Home';
-import Login from '@/pages/auth/Login';
-import Register from '@/pages/auth/Register';
-import RecoverPassword from '@/pages/auth/RecoverPassword';
 import NotFound from '@/pages/NotFound';
 import Dashboard from '@/pages/Dashboard';
-//import Profile from '@/pages/Profile';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
@@ -27,7 +21,7 @@ const withSuspense = (Component: React.ComponentType) => (
 );
 
 export const routeConfig: RouteObject[] = [
-  // Public routes
+  // Public routes - Landing with auth modals
   {
     path: '/',
     element: <MainLayout isLanding />,
@@ -36,37 +30,18 @@ export const routeConfig: RouteObject[] = [
         index: true,
         element: <Home />,
       },
-    ],
-  },
-
-  // Auth routes
-  {
-    path: '/',
-    element: <AuthLayout />,
-    children: [
+      // Auth routes as modals over landing
       {
         path: 'login',
-        element: (
-          <PublicOnlyRoute>
-            <Login />
-          </PublicOnlyRoute>
-        ),
+        element: <Home authModal="login" />,
       },
       {
         path: 'register',
-        element: (
-          <PublicOnlyRoute>
-            <Register />
-          </PublicOnlyRoute>
-        ),
+        element: <Home authModal="register" />,
       },
       {
         path: 'recover-password',
-        element: (
-          <PublicOnlyRoute>
-            <RecoverPassword />
-          </PublicOnlyRoute>
-        ),
+        element: <Home authModal="recover" />,
       },
     ],
   },

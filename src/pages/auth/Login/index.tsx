@@ -11,15 +11,13 @@ const Login = () => {
     useLogin();
 
   return (
-    <div className="max-w-md">
+    <div>
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Iniciar Sesión</h2>
-        <p className="mt-2 text-gray-600">Ingresá tus credenciales para acceder a tu cuenta</p>
+        <p className="text-gray-600">Ingresá tus credenciales para acceder a tu cuenta</p>
       </div>
       {error && (
         <div className="mb-4 p-3 bg-error-50 text-error-800 rounded-md text-center">{error}</div>
       )}
-      <hr className="my-6" />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}

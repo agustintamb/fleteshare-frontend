@@ -1,6 +1,7 @@
 import { Form, Formik } from 'formik';
 import { Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { ROUTES } from '@/utils/constants';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 import { validationSchema } from './schema';
@@ -71,7 +72,7 @@ const RecoverPassword = () => {
           <p className="text-sm text-center text-gray-500 mb-4">
             Si no recibís el correo, revisá tu carpeta de spam.
           </p>
-          <Link to="/iniciar-sesion">
+          <Link to={ROUTES.LOGIN}>
             <Button variant="outline" fullWidth>
               Volver al inicio de sesión
             </Button>
@@ -83,7 +84,7 @@ const RecoverPassword = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             ¿Recordaste tu contraseña?{' '}
-            <Link to="/iniciar-sesion" className="text-primary-600 hover:text-primary-500 font-medium">
+            <Link to={ROUTES.LOGIN} className="text-primary-600 hover:text-primary-500 font-medium">
               Inicia sesión
             </Link>
           </p>

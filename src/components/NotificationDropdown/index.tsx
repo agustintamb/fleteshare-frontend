@@ -1,10 +1,11 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Bell, Info, AlertTriangle, CheckCircle, XCircle, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ROUTES } from '@/utils/constants';
 import { NotificationType } from '@/interfaces/notifications';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useNotifications } from '@/hooks/useNotifications';
-import { Link } from 'react-router-dom';
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -192,7 +193,10 @@ const NotificationDropdown = () => {
             {/* Footer */}
             {notifications.length > 0 && (
               <div className="px-4 py-3 border-t border-gray-100">
-                <Link className="block text-center text-sm text-primary-600" to="/notificaciones">
+                <Link
+                  className="block text-center text-sm text-primary-600"
+                  to={ROUTES.NOTIFICATIONS}
+                >
                   Ver todas las notificaciones
                 </Link>
               </div>

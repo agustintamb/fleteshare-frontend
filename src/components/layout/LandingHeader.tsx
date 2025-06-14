@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Truck, Menu, X, User, LogIn } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ROUTES } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
 
@@ -67,19 +68,19 @@ const LandingHeader = () => {
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             {isAuthenticated ? (
-              <Link to="/dashboard">
+              <Link to={ROUTES.DASHBOARD}>
                 <Button variant="primary" size="sm" icon={<User size={16} />}>
                   Dashboard
                 </Button>
               </Link>
             ) : (
               <>
-                <Link to="/iniciar-sesion">
+                <Link to={ROUTES.LOGIN}>
                   <Button variant="ghost" size="sm">
                     Iniciar sesión
                   </Button>
                 </Link>
-                <Link to="/crear-cuenta">
+                <Link to={ROUTES.CREATE_ACCOUNT}>
                   <Button variant="primary" size="sm" icon={<LogIn size={16} />}>
                     Registrarse
                   </Button>
@@ -126,19 +127,19 @@ const LandingHeader = () => {
                 <hr className="border-gray-200" />
 
                 {isAuthenticated ? (
-                  <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)}>
+                  <Link to={ROUTES.DASHBOARD} onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="primary" fullWidth icon={<User size={16} />}>
                       Dashboard
                     </Button>
                   </Link>
                 ) : (
                   <div className="flex flex-col space-y-3">
-                    <Link to="/iniciar-sesion" onClick={() => setMobileMenuOpen(false)}>
+                    <Link to={ROUTES.LOGIN} onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="ghost" fullWidth>
                         Iniciar sesión
                       </Button>
                     </Link>
-                    <Link to="/crear-cuenta" onClick={() => setMobileMenuOpen(false)}>
+                    <Link to={ROUTES.RECOVER_ACCOUNT} onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="primary" fullWidth icon={<LogIn size={16} />}>
                         Registrarse
                       </Button>

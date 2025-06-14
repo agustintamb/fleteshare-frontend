@@ -3,6 +3,7 @@ import { User, KeyRound } from 'lucide-react';
 import { Form, Formik } from 'formik';
 import { validationSchema } from './schema';
 import { useLogin } from './useLogin';
+import { ROUTES } from '@/utils/constants';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 
@@ -72,7 +73,10 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <Link to="/recuperar-cuenta" className="text-primary-600 hover:text-primary-500">
+                <Link
+                  to={ROUTES.RECOVER_ACCOUNT}
+                  className="text-primary-600 hover:text-primary-500"
+                >
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -96,7 +100,10 @@ const Login = () => {
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           ¿No tenés una cuenta?{' '}
-          <Link to="/crear-cuenta" className="text-primary-600 hover:text-primary-500 font-medium">
+          <Link
+            to={ROUTES.CREATE_ACCOUNT}
+            className="text-primary-600 hover:text-primary-500 font-medium"
+          >
             Registrate
           </Link>
         </p>

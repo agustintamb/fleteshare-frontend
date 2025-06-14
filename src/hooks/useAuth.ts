@@ -9,6 +9,11 @@ export const useAuth = () => {
 
   const isAuthenticated = getToken();
 
+  const isCustomer = currentUser?.role === 'customer';
+  const isTransporter = currentUser?.role === 'transporter';
+  const isProfileCompleted = currentUser?.isProfileCompleted;
+  const isUserValidated = currentUser?.isValidated;
+
   const handleLogout = () => {
     removeToken();
     window.location.href = '/iniciar-sesion';
@@ -19,6 +24,10 @@ export const useAuth = () => {
     isLoading,
     isSessionExpired,
     isAuthenticated,
+    isCustomer,
+    isTransporter,
+    isProfileCompleted,
+    isUserValidated,
     handleLogout,
   };
 };

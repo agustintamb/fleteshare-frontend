@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
+import { ROUTES } from '@/utils/constants';
 import Button from '@/components/ui/Button';
 
 const NotFound = () => {
@@ -10,7 +11,7 @@ const NotFound = () => {
       <p className="text-lg text-gray-600 mb-8 max-w-md">
         Lo sentimos, la página que estás buscando no existe o ha sido movida.
       </p>
-      <Link to="/">
+      <Link to={ROUTES.HOME}>
         <Button variant="primary" icon={<Home size={18} />}>
           Volver al inicio
         </Button>

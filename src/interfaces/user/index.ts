@@ -15,6 +15,8 @@ export interface IUser {
   role: UserRole;
   phone: string;
   license?: File | null;
+  isProfileCompleted: boolean;
+  isValidated: boolean;
 }
 
 export interface IGetCurrentUserResponse {

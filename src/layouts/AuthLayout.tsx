@@ -1,11 +1,15 @@
 import { Outlet, Link } from 'react-router-dom';
 import { Truck } from 'lucide-react';
+import { ROUTES } from '@/utils/constants';
 
 const AuthLayout = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50">
       <div className="px-4 sm:px-6 py-4">
-        <Link to="/" className="flex items-center text-primary-600 font-semibold gap-2 min-h-[40px]">
+        <Link
+          to={ROUTES.HOME}
+          className="flex items-center text-primary-600 font-semibold gap-2 min-h-[40px]"
+        >
           <Truck size={24} />
           <span className="text-xl">FleteShare</span>
         </Link>

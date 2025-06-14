@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { AppDispatch } from '@/app/store';
+import { ROUTES } from '@/utils/constants';
+import { IRecoverPasswordParams } from '@/interfaces/auth';
 import { clearAuth, selectorAuth } from '@/features/auth/slice';
 import { recoverPassword } from '@/features/auth/asyncActions';
-import { IRecoverPasswordParams } from '@/interfaces/auth';
-import { useNavigate } from 'react-router-dom';
 
 export const useRecoverPassword = () => {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export const useRecoverPassword = () => {
     username: localStorage.getItem('username') || '',
   };
 
-  const handleGoToLogin = () => navigate('/iniciar-sesion');
+  const handleGoToLogin = () => navigate(ROUTES.LOGIN);
 
   const handleRecoverPassword = (username: string) => dispatch(recoverPassword({ username }));
 

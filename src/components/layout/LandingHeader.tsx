@@ -74,12 +74,12 @@ const LandingHeader = () => {
               </Link>
             ) : (
               <>
-                <Link to="/login">
+                <Link to="/iniciar-sesion">
                   <Button variant="ghost" size="sm">
                     Iniciar sesión
                   </Button>
                 </Link>
-                <Link to="/register">
+                <Link to="/crear-cuenta">
                   <Button variant="primary" size="sm" icon={<LogIn size={16} />}>
                     Registrarse
                   </Button>
@@ -133,12 +133,12 @@ const LandingHeader = () => {
                   </Link>
                 ) : (
                   <div className="flex flex-col space-y-3">
-                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>
+                    <Link to="/iniciar-sesion" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="ghost" fullWidth>
                         Iniciar sesión
                       </Button>
                     </Link>
-                    <Link to="/register" onClick={() => setMobileMenuOpen(false)}>
+                    <Link to="/crear-cuenta" onClick={() => setMobileMenuOpen(false)}>
                       <Button variant="primary" fullWidth icon={<LogIn size={16} />}>
                         Registrarse
                       </Button>

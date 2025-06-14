@@ -11,7 +11,7 @@ export const useAuth = () => {
 
   const handleLogout = () => {
     removeToken();
-    window.location.href = '/login';
+    window.location.href = '/iniciar-sesion';
   };
 
   return {

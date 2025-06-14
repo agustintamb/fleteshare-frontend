@@ -7,7 +7,8 @@ export interface IUserSession {
 }
 
 export interface IUser {
-  id: string;
+  _id: string;
+  avatar?: string | null;
   firstName: string;
   lastName: string;
   username: string;

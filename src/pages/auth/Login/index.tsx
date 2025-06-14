@@ -72,7 +72,7 @@ const Login = () => {
               </div>
 
               <div className="text-sm">
-                <Link to="/recover-password" className="text-primary-600 hover:text-primary-500">
+                <Link to="/recuperar-cuenta" className="text-primary-600 hover:text-primary-500">
                   ¿Olvidaste tu contraseña?
                 </Link>
               </div>
@@ -96,7 +96,7 @@ const Login = () => {
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           ¿No tenés una cuenta?{' '}
-          <Link to="/register" className="text-primary-600 hover:text-primary-500 font-medium">
+          <Link to="/crear-cuenta" className="text-primary-600 hover:text-primary-500 font-medium">
             Registrate
           </Link>
         </p>

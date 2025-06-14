@@ -71,7 +71,7 @@ const RecoverPassword = () => {
           <p className="text-sm text-center text-gray-500 mb-4">
             Si no recibís el correo, revisá tu carpeta de spam.
           </p>
-          <Link to="/login">
+          <Link to="/iniciar-sesion">
             <Button variant="outline" fullWidth>
               Volver al inicio de sesión
             </Button>
@@ -83,7 +83,7 @@ const RecoverPassword = () => {
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600">
             ¿Recordaste tu contraseña?{' '}
-            <Link to="/login" className="text-primary-600 hover:text-primary-500 font-medium">
+            <Link to="/iniciar-sesion" className="text-primary-600 hover:text-primary-500 font-medium">
               Inicia sesión
             </Link>
           </p>

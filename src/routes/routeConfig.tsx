@@ -32,15 +32,15 @@ export const routeConfig: RouteObject[] = [
       },
       // Auth routes as modals over landing
       {
-        path: 'login',
+        path: 'iniciar-sesion',
         element: <Home authModal="login" />,
       },
       {
-        path: 'register',
+        path: 'crear-cuenta',
         element: <Home authModal="register" />,
       },
       {
-        path: 'recover-password',
+        path: 'recuperar-cuenta',
         element: <Home authModal="recover" />,
       },
     ],

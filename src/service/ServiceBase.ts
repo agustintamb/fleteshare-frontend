@@ -53,7 +53,7 @@ export default abstract class ServiceBase {
             logoutCases.some(logoutCase => errorMessage.includes(logoutCase)) ||
             !localStorage.getItem('token');
 
-          const isLoginPage = location.pathname === '/login';
+          const isLoginPage = location.pathname === '/iniciar-sesion';
 
           if (!isLoginPage && shouldLogout) {
             this.clearSession();

@@ -15,7 +15,7 @@ export const useRecoverPassword = () => {
     username: localStorage.getItem('username') || '',
   };
 
-  const handleGoToLogin = () => navigate('/login');
+  const handleGoToLogin = () => navigate('/iniciar-sesion');
 
   const handleRecoverPassword = (username: string) => dispatch(recoverPassword({ username }));
 

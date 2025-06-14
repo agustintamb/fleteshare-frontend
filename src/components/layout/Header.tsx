@@ -1,41 +1,27 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Truck, Bell, User } from 'lucide-react';
+import { Truck, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/hooks/useAuth';
-
-type Notification = {
-  id: string;
-  userId: string;
-  title: string;
-  message: string;
-  createdAt: string;
-  read: boolean;
-};
-
-const mockNotifications: Notification[] = [
-  // { id: '1', userId: '123', title: 'Paquete entregado', message: 'Tu paquete ha sido entregado.', createdAt: new Date().toISOString(), read: false },
-];
+import { useOutsideClick } from '@/hooks/useOutsideClick';
+import NotificationDropdown from '@/components/NotificationDropdown';
 
 const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const { isAuthenticated, handleLogout } = useAuth();
   const location = useLocation();
+  const { currentUser, isAuthenticated, handleLogout } = useAuth();
+  const dropdownRef = useOutsideClick<HTMLDivElement>(() => {
+    setIsProfileOpen(false);
+  });
 
-  const user = JSON.parse(localStorage.getItem('user') || '{}'); // Assuming user data is stored in localStorage
-
-  // Close menus when route changes
   useEffect(() => {
     setIsProfileOpen(false);
   }, [location.pathname]);
 
-  const [notifications] = useState<Notification[]>(mockNotifications);
-  const unreadCount = notifications.filter(n => !n.read && n.userId === user?.id).length;
-
   return (
     <header className="bg-gray-50 fixed top-0 left-0 w-full z-50">
       <nav className="container mx-auto px-4 sm:px-6 py-4">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center" ref={dropdownRef}>
           {/* Logo */}
           <Link to="/" className="flex items-center text-primary-600 font-semibold gap-2">
             <Truck size={24} />
@@ -44,19 +30,6 @@ const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
-            {isAuthenticated && (
-              <Link
-                to="/notifications"
-                className="relative text-gray-500 hover:text-primary-600 transition"
-              >
-                <Bell size={22} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
-                    {unreadCount}
-                  </span>
-                )}
-              </Link>
-            )}
             {isAuthenticated ? (
               <>
                 <Link to="/dashboard" className="text-gray-700 hover:text-primary-600 transition">
@@ -65,14 +38,19 @@ const Header = () => {
                 <Link to="/freight" className="text-gray-700 hover:text-primary-600 transition">
                   Fletes
                 </Link>
+                <NotificationDropdown />
                 <div className="relative ml-3">
                   <button
                     onClick={() => setIsProfileOpen(!isProfileOpen)}
                     className="flex items-center space-x-2 focus:outline-none"
                   >
-                    <div className="flex items-center justify-center w-8 h-8 bg-primary-100 text-primary-700 rounded-full">
-                      {user?.avatar ? (
-                        <img src={user.avatar} alt={user.name} className="w-8 h-8 rounded-full" />
+                    <div className="flex items-center justify-center w-6 h-6 bg-primary-100 text-primary-700 rounded-full">
+                      {currentUser?.avatar ? (
+                        <img
+                          src={currentUser.avatar}
+                          alt={currentUser.firstName}
+                          className="w-6 h-6 rounded-full"
+                        />
                       ) : (
                         <User size={16} />
                       )}
@@ -95,14 +73,6 @@ const Header = () => {
                           >
                             Mi Perfil
                           </Link>
-                          {user?.role === 'admin' && (
-                            <Link
-                              to="/admin"
-                              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                              Panel Administrador
-                            </Link>
-                          )}
                           <button
                             onClick={handleLogout}
                             className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -118,7 +88,7 @@ const Header = () => {
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
-                  to="/login"
+                  to="/iniciar-sesion"
                   className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition shadow-sm"
                 >
                   Iniciar Sesión
@@ -129,17 +99,8 @@ const Header = () => {
 
           {/* Mobile Menu Button */}
           {isAuthenticated && (
-            <div className="md:hidden flex items-center">
-              <div className="relative mr-4">
-                <Link to="/notifications" className="text-gray-500 hover:text-primary-600">
-                  <Bell size={24} />
-                  {unreadCount > 0 && (
-                    <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Link>
-              </div>
+            <div className="md:hidden flex items-center space-x-4">
+              <NotificationDropdown />
             </div>
           )}
         </div>

@@ -56,7 +56,7 @@ const Home = ({ authModal }: IHomeProps) => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <>
-                    <Link to={isAuthenticated ? '/dashboard' : '/login'}>
+                    <Link to={isAuthenticated ? '/dashboard' : '/iniciar-sesion'}>
                       <Button size="lg" variant="primary" icon={<Truck size={20} />}>
                         Comenzar ahora
                       </Button>

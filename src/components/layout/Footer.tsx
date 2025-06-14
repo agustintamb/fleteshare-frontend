@@ -42,7 +42,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/register" className="text-gray-400 hover:text-white transition-colors">
+                <Link to="/crear-cuenta" className="text-gray-400 hover:text-white transition-colors">
                   Convertirse en Transportista
                 </Link>
               </li>

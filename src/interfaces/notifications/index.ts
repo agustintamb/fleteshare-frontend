@@ -5,9 +5,12 @@ export interface IGetNotificationsParams {
 }
 
 export interface IGetNotificationsResponse {
-  notifications: INotification[];
-  count: INotificationsCount;
-  pagination: INotificationsPagination;
+  message: string;
+  result: {
+    notifications: INotification[];
+    count: INotificationsCount;
+    pagination: INotificationsPagination;
+  };
 }
 
 export interface IGetNotificationsQuery {

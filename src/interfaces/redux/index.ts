@@ -1,4 +1,4 @@
 export interface IBaseSlice {
-  isLoading: boolean | undefined;
+  isLoading: boolean;
   error: string | null;
 }

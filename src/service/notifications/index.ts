@@ -6,13 +6,11 @@ class NotificationsService extends ServiceBase {
   getNotifications = (query?: {
     userId?: string;
     limit: number;
-    offset: number;
+    page: number;
   }): Promise<AxiosResponse<IGetNotificationsResponse>> => {
-    let getQuery = '';
-    if (query) {
-      const { userId, limit, offset } = query;
-      getQuery = `?limit=${limit}&offset=${offset}&userId=${userId || ''}`;
-    }
+    const getQuery = query
+      ? `?page=${query.page}&limit=${query.limit}&userId=${query.userId || ''}`
+      : '';
     return this.client.get(`notifications${getQuery}`, {});
   };
 

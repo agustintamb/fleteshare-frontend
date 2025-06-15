@@ -16,7 +16,7 @@ export interface IGetNotificationsResponse {
 export interface IGetNotificationsQuery {
   userId?: string;
   limit: number;
-  offset: number;
+  page: number;
 }
 
 export interface INotification {

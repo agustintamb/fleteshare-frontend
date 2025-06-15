@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ROUTES } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
-import NotificationDropdown from '@/components/NotificationDropdown';
+import NotificationDropdown from '@/components/Notifications/NotificationDropdown';
 
 const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);

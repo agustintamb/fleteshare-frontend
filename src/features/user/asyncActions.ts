@@ -12,8 +12,8 @@ export const getCurrentUser = createAsyncThunk(
       dispatch(
         getNotifications({
           userId: data.result._id,
+          page: 1,
           limit: 10,
-          offset: 0,
         })
       );
       return data;

@@ -1,13 +1,17 @@
 import { useState } from 'react';
-import { Bell, Info, AlertTriangle, CheckCircle, XCircle, Trash2 } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Bell, Trash2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { NotificationType } from '@/interfaces/notifications';
+import { ROUTES } from '@/utils/constants';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { useNotifications } from '@/hooks/useNotifications';
-import { Link } from 'react-router-dom';
+import NotificationIcon from './NotificationIcon';
+import Modal from '@/components/ui/Modal';
 
 const NotificationDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [notificationToDelete, setNotificationToDelete] = useState<string | null>(null);
 
   const {
     notifications,
@@ -17,29 +21,10 @@ const NotificationDropdown = () => {
     loadMoreNotifications,
     markAsRead,
     removeNotification,
-    refreshNotifications,
     getTimeAgo,
   } = useNotifications();
 
   const dropdownRef = useOutsideClick<HTMLDivElement>(() => setIsOpen(false));
-
-  // Función para obtener el icono según el tipo de notificación
-  const getNotificationIcon = (type: NotificationType) => {
-    const iconProps = { size: 16, className: 'flex-shrink-0' };
-
-    switch (type) {
-      case 'info':
-        return <Info {...iconProps} className="text-blue-500 flex-shrink-0" />;
-      case 'warning':
-        return <AlertTriangle {...iconProps} className="text-yellow-500 flex-shrink-0" />;
-      case 'success':
-        return <CheckCircle {...iconProps} className="text-green-500 flex-shrink-0" />;
-      case 'error':
-        return <XCircle {...iconProps} className="text-red-500 flex-shrink-0" />;
-      default:
-        return <Info {...iconProps} className="text-blue-500 flex-shrink-0" />;
-    }
-  };
 
   // Manejar scroll infinito
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
@@ -50,11 +35,27 @@ const NotificationDropdown = () => {
     }
   };
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-    if (!isOpen) {
-      refreshNotifications(); // Refrescar notificaciones al abrir
+  const toggleDropdown = () => setIsOpen(!isOpen);
+
+  // Manejar eliminación de notificación
+  const handleDeleteNotification = (notificationId: string) => {
+    setNotificationToDelete(notificationId);
+    setShowDeleteModal(true);
+  };
+
+  // Confirmar eliminación
+  const confirmDeleteNotification = () => {
+    if (notificationToDelete) {
+      removeNotification(notificationToDelete);
     }
+    setShowDeleteModal(false);
+    setNotificationToDelete(null);
+  };
+
+  // Cancelar eliminación
+  const cancelDeleteNotification = () => {
+    setShowDeleteModal(false);
+    setNotificationToDelete(null);
   };
 
   return (
@@ -127,7 +128,7 @@ const NotificationDropdown = () => {
                               : 'bg-blue-100'
                           }`}
                         >
-                          {getNotificationIcon(notification.type)}
+                          <NotificationIcon type={notification.type} />
                         </div>
 
                         {/* Content */}
@@ -145,9 +146,10 @@ const NotificationDropdown = () => {
                             <button
                               onClick={e => {
                                 e.stopPropagation();
-                                removeNotification(notification._id);
+                                handleDeleteNotification(notification._id);
                               }}
                               className="text-gray-400 hover:text-red-500 hover:bg-red-50 p-1 rounded-full transition-all duration-200 flex-shrink-0"
+                              title="Eliminar notificación"
                             >
                               <Trash2 size={14} />
                             </button>
@@ -192,7 +194,11 @@ const NotificationDropdown = () => {
             {/* Footer */}
             {notifications.length > 0 && (
               <div className="px-4 py-3 border-t border-gray-100">
-                <Link className="block text-center text-sm text-primary-600" to="/notificaciones">
+                <Link
+                  className="block text-center text-sm text-primary-600"
+                  onClick={() => setIsOpen(false)}
+                  to={ROUTES.NOTIFICATIONS}
+                >
                   Ver todas las notificaciones
                 </Link>
               </div>
@@ -200,6 +206,35 @@ const NotificationDropdown = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Modal de confirmación */}
+      <Modal
+        open={showDeleteModal}
+        onClose={cancelDeleteNotification}
+        title="Eliminar notificación"
+        size="sm"
+        actions={
+          <div className="flex gap-3">
+            <button
+              onClick={cancelDeleteNotification}
+              className="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors font-medium"
+            >
+              Cancelar
+            </button>
+            <button
+              onClick={confirmDeleteNotification}
+              className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
+            >
+              Eliminar
+            </button>
+          </div>
+        }
+      >
+        <div className="text-gray-700">
+          <p>¿Estás seguro?</p>
+          <p className="text-sm text-gray-500 mt-2">Esta acción no se puede deshacer.</p>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios';
 import store from '@/app/store';
 import { getToken } from '@/utils/storage';
 import { setIsSessionExpired } from '@/features/auth/slice';
-import { VITE_API_URL } from '@/utils/constants';
+import { ROUTES, VITE_API_URL } from '@/utils/constants';
 
 export default abstract class ServiceBase {
   protected readonly client;
@@ -17,7 +17,6 @@ export default abstract class ServiceBase {
     });
     this.setupInterceptors();
   }
-
 
   private handleSessionExpired() {
     store.dispatch(setIsSessionExpired(true));
@@ -53,7 +52,7 @@ export default abstract class ServiceBase {
             logoutCases.some(logoutCase => errorMessage.includes(logoutCase)) ||
             !localStorage.getItem('token');
 
-          const isLoginPage = location.pathname === '/iniciar-sesion';
+          const isLoginPage = location.pathname === ROUTES.LOGIN;
 
           if (!isLoginPage && shouldLogout) {
             this.clearSession();

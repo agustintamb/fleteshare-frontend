@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Truck, Package, Star, MessageSquare, Award, TrendingUp } from 'lucide-react';
+import { ROUTES } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
 import AuthModal from '@/pages/auth/AuthModal';
@@ -360,7 +361,7 @@ const Home = ({ authModal }: IHomeProps) => {
                 FleteShare tiene la solución para vos.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link to="/dashboard">
+                <Link to={ROUTES.DASHBOARD}>
                   <Button size="lg" variant="secondary">
                     Ir a mi Dashboard
                   </Button>

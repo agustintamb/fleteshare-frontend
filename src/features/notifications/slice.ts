@@ -58,15 +58,17 @@ export const notificationsSlice = createSlice({
           state.isLoading = false;
           state.error = null;
 
+          const { result } = action.payload;
+
           // Si es la primera página, reemplazar; si no, agregar al final (scroll infinito)
-          if (action.payload.pagination.currentPage === 1) {
-            state.notifications = action.payload.notifications;
+          if (result.pagination.currentPage === 1) {
+            state.notifications = result.notifications;
           } else {
-            state.notifications = [...state.notifications, ...action.payload.notifications];
+            state.notifications = [...state.notifications, ...result.notifications];
           }
 
-          state.count = action.payload.count;
-          state.pagination = action.payload.pagination;
+          state.count = result.count;
+          state.pagination = result.pagination;
         }
       )
       .addCase(getNotifications.rejected, (state, action) => {

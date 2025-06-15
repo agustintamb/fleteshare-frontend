@@ -2,9 +2,10 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Truck, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { ROUTES } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import { useOutsideClick } from '@/hooks/useOutsideClick';
-import NotificationDropdown from '@/components/NotificationDropdown';
+import NotificationDropdown from '@/components/Notifications/NotificationDropdown';
 
 const Header = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
@@ -23,7 +24,7 @@ const Header = () => {
       <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center" ref={dropdownRef}>
           {/* Logo */}
-          <Link to="/" className="flex items-center text-primary-600 font-semibold gap-2">
+          <Link to={ROUTES.HOME} className="flex items-center text-primary-600 font-semibold gap-2">
             <Truck size={24} />
             <span className="text-xl">FleteShare</span>
           </Link>
@@ -32,10 +33,10 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-8">
             {isAuthenticated ? (
               <>
-                <Link to="/dashboard" className="text-gray-700 hover:text-primary-600 transition">
+                <Link to={ROUTES.DASHBOARD} className="text-gray-700 hover:text-primary-600 transition">
                   Dashboard
                 </Link>
-                <Link to="/freight" className="text-gray-700 hover:text-primary-600 transition">
+                <Link to={ROUTES.FREIGHT} className="text-gray-700 hover:text-primary-600 transition">
                   Fletes
                 </Link>
                 <NotificationDropdown />
@@ -68,7 +69,7 @@ const Header = () => {
                       >
                         <div className="py-1">
                           <Link
-                            to="/profile"
+                            to={ROUTES.PROFILE}
                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
                           >
                             Mi Perfil
@@ -88,7 +89,7 @@ const Header = () => {
             ) : (
               <div className="flex items-center space-x-4">
                 <Link
-                  to="/iniciar-sesion"
+                  to={ROUTES.LOGIN}
                   className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 transition shadow-sm"
                 >
                   Iniciar Sesión

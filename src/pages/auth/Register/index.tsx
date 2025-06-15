@@ -3,6 +3,7 @@ import { User, Mail, KeyRound, Phone } from 'lucide-react';
 import { Form, Formik } from 'formik';
 import { validationSchema } from './schema';
 import { useRegister } from './useRegister';
+import { ROUTES } from '@/utils/constants';
 import Input from '@/components/ui/Input';
 import Button from '@/components/ui/Button';
 
@@ -268,7 +269,7 @@ const Register = () => {
       <div className="mt-6 text-center">
         <p className="text-sm text-gray-600">
           ¿Ya tenés una cuenta?{' '}
-          <Link to="/iniciar-sesion" className="text-primary-600 hover:text-primary-500 font-medium">
+          <Link to={ROUTES.LOGIN} className="text-primary-600 hover:text-primary-500 font-medium">
             Inicia sesión
           </Link>
         </p>

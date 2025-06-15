@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import { ROUTES } from '@/utils/constants';
 import { Truck, Facebook, Twitter, Instagram, Linkedin } from 'lucide-react';
 
 const Footer = () => {
@@ -8,7 +9,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and description */}
           <div className="col-span-1 md:col-span-2">
-            <Link to="/" className="flex items-center text-white font-semibold gap-2">
+            <Link to={ROUTES.HOME} className="flex items-center text-white font-semibold gap-2">
               <Truck size={24} />
               <span className="text-xl">FleteShare</span>
             </Link>
@@ -37,12 +38,18 @@ const Footer = () => {
             <h5 className="text-white font-semibold mb-4">Servicios</h5>
             <ul className="space-y-2">
               <li>
-                <Link to="/freight" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  to={ROUTES.FREIGHT}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Solicitar Flete
                 </Link>
               </li>
               <li>
-                <Link to="/crear-cuenta" className="text-gray-400 hover:text-white transition-colors">
+                <Link
+                  to={ROUTES.CREATE_ACCOUNT}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
                   Convertirse en Transportista
                 </Link>
               </li>

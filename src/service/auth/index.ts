@@ -10,8 +10,31 @@ import {
 } from '@/interfaces/auth';
 
 class AuthService extends ServiceBase {
-  register = (params: IRegisterParams) =>
-    this.client.post<ResponseType, AxiosResponse<IRegisterResponse>>('auth/register', params, {});
+  register = (params: IRegisterParams) => {
+    // Si hay licencia, usar FormData
+    if (params.license) {
+      const formData = new FormData();
+      Object.entries(params).forEach(([key, value]) => {
+        if (value !== null && value !== undefined) formData.append(key, value);
+      });
+      return this.client.post<ResponseType, AxiosResponse<IRegisterResponse>>(
+        'auth/register',
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+      );
+    }
+    // Si no hay licencia, usar JSON normal
+    return this.client.post<ResponseType, AxiosResponse<IRegisterResponse>>(
+      'auth/register',
+      params,
+      {}
+    );
+  };
+
   login = (params: ILoginParams) =>
     this.client.post<ResponseType, AxiosResponse<ILoginResponse>>('auth/login', params, {});
   recoverPassword = (params: IRecoverPasswordParams) =>

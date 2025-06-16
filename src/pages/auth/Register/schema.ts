@@ -24,8 +24,8 @@ export const validationSchema = Yup.object().shape({
     .required('La contraseña es obligatoria')
     .min(5, 'Debe tener al menos 5 caracteres')
     .matches(
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/,
-      'Debe contener al menos una mayúscula y un número'
+      /^(?=.*[a-z])(?=.*\d)/,
+      'Debe contener al menos un número'
     ),
 
   confirmPassword: Yup.string()

@@ -2,7 +2,7 @@ import { RootState } from '@/app/store';
 import { createSlice } from '@reduxjs/toolkit';
 import { IBaseSlice } from '@/interfaces/redux';
 import { errorMessage } from '@/utils/errorMessage';
-import { getCurrentUser } from './asyncActions';
+import { getCurrentUser, updateUserProfile } from './asyncActions';
 import { IUser } from '@/interfaces/user';
 
 interface initialStateProps extends IBaseSlice {
@@ -31,6 +31,19 @@ export const userSlice = createSlice({
         state.error = null;
       })
       .addCase(getCurrentUser.rejected, (state, action) => {
+        state.isLoading = false;
+        state.error = errorMessage(action.payload);
+      })
+      .addCase(updateUserProfile.pending, state => {
+        state.isLoading = true;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.fulfilled, (state, action) => {
+        state.user = { ...state.user, ...action.payload.result };
+        state.isLoading = false;
+        state.error = null;
+      })
+      .addCase(updateUserProfile.rejected, (state, action) => {
         state.isLoading = false;
         state.error = errorMessage(action.payload);
       });

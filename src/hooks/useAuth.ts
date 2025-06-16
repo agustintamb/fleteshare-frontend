@@ -5,14 +5,13 @@ import { getToken, removeToken } from '@/utils/storage';
 
 export const useAuth = () => {
   const { isSessionExpired } = useSelector(selectorAuth);
-  const { user: currentUser, isLoading } = useSelector(selectorUser);
+  const { user: currentUser, isLoading, error } = useSelector(selectorUser);
 
   const isAuthenticated = getToken();
 
   const isCustomer = currentUser?.role === 'customer';
   const isTransporter = currentUser?.role === 'transporter';
   const isProfileCompleted = currentUser?.isProfileCompleted;
-  const isUserValidated = currentUser?.isValidated;
 
   const handleLogout = () => {
     removeToken();
@@ -21,13 +20,13 @@ export const useAuth = () => {
 
   return {
     currentUser,
+    error,
     isLoading,
     isSessionExpired,
     isAuthenticated,
     isCustomer,
     isTransporter,
     isProfileCompleted,
-    isUserValidated,
     handleLogout,
   };
 };

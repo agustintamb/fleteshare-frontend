@@ -35,7 +35,7 @@ export const useRegister = () => {
           confirmPassword: values.confirmPassword,
           role: values.role,
           phone: values.phone,
-          // license: values.license, // TODO: Manejar la subida de archivo
+          license: values.license,
         })
       );
     } catch (err) {

@@ -48,12 +48,10 @@ const NotificationsDesktop = ({
             <Bell size={28} className="text-primary-600" />
             Notificaciones
           </h1>
-          {unreadCount > 0 && (
-            <p className="text-gray-600 mt-2">
-              Tienes <span className="font-semibold text-primary-600">{unreadCount}</span>{' '}
-              notificaciones sin leer
-            </p>
-          )}
+          <p className="text-gray-600 mt-2">
+            Tenés <span className="font-semibold text-primary-600">{unreadCount}</span>{' '}
+            notificaciones sin leer
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-1 min-h-0">

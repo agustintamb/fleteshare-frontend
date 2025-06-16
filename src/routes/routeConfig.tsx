@@ -12,7 +12,7 @@ import Home from '@/pages/Home';
 import NotFound from '@/pages/NotFound';
 import Dashboard from '@/pages/Dashboard';
 import Notifications from '@/pages/Notifications';
-//import Profile from '@/pages/Profile';
+import Profile from '@/pages/Profile';
 
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
 
@@ -59,7 +59,7 @@ export const routeConfig: RouteObject[] = [
     children: [
       { path: 'dashboard', element: withSuspense(Dashboard) },
       { path: 'notificaciones', element: withSuspense(Notifications) },
-      //{ path: 'mi-perfil', element: withSuspense(Profile) },
+      { path: 'mi-perfil', element: withSuspense(Profile) },
       //{
       //  path: 'freight',
       //  children: [

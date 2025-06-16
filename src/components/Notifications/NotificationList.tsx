@@ -38,8 +38,8 @@ const NotificationList = ({
       return (
         <div className="p-8 text-center text-gray-500">
           <Bell size={48} className="mx-auto mb-4 text-gray-300" />
-          <p className="text-lg font-medium">No tienes notificaciones</p>
-          <p className="text-sm mt-1">Cuando recibas notificaciones, aparecerán aquí</p>
+          <p className="text-lg font-medium">No tenés notificaciones</p>
+          <p className="text-sm mt-1">Cuando recibas notificaciones, aparecerán acá</p>
         </div>
       );
     }

@@ -24,7 +24,10 @@ const Header = () => {
       <nav className="container mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center" ref={dropdownRef}>
           {/* Logo */}
-          <Link to={ROUTES.HOME} className="flex items-center text-primary-600 font-semibold gap-2">
+          <Link
+            to={ROUTES.DASHBOARD}
+            className="flex items-center text-primary-600 font-semibold gap-2"
+          >
             <Truck size={24} />
             <span className="text-xl">FleteShare</span>
           </Link>
@@ -33,10 +36,16 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-8">
             {isAuthenticated ? (
               <>
-                <Link to={ROUTES.DASHBOARD} className="text-gray-700 hover:text-primary-600 transition">
+                <Link
+                  to={ROUTES.DASHBOARD}
+                  className="text-gray-700 hover:text-primary-600 transition"
+                >
                   Dashboard
                 </Link>
-                <Link to={ROUTES.FREIGHT} className="text-gray-700 hover:text-primary-600 transition">
+                <Link
+                  to={ROUTES.FREIGHT}
+                  className="text-gray-700 hover:text-primary-600 transition"
+                >
                   Fletes
                 </Link>
                 <NotificationDropdown />

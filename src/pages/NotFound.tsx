@@ -2,8 +2,10 @@ import { Link } from 'react-router-dom';
 import { Home } from 'lucide-react';
 import { ROUTES } from '@/utils/constants';
 import Button from '@/components/ui/Button';
+import { useAuth } from '@/hooks/useAuth';
 
 const NotFound = () => {
+  const { isAuthenticated } = useAuth();
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
       <h1 className="text-9xl font-bold text-primary-600">404</h1>
@@ -11,7 +13,7 @@ const NotFound = () => {
       <p className="text-lg text-gray-600 mb-8 max-w-md">
         Lo sentimos, la página que estás buscando no existe o ha sido movida.
       </p>
-      <Link to={ROUTES.HOME}>
+      <Link to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.HOME}>
         <Button variant="primary" icon={<Home size={18} />}>
           Volver al inicio
         </Button>

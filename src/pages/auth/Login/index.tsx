@@ -17,7 +17,9 @@ const Login = () => {
         <p className="text-gray-600">Ingresá tus credenciales para acceder a tu cuenta</p>
       </div>
       {error && (
-        <div className="mb-4 p-3 bg-error-50 text-error-800 rounded-md text-center">{error}</div>
+        <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-400 rounded-md">
+          <div className="text-red-700 text-sm font-medium">{error}</div>
+        </div>
       )}
       <Formik
         initialValues={initialValues}

@@ -1,20 +1,18 @@
 import React, { Suspense } from 'react';
 import { RouteObject } from 'react-router-dom';
 
-// Layouts
 import MainLayout from '@/layouts/MainLayout';
 
-// Guards
 import PrivateRoute from '@/components/guards/PrivateRoute';
-
-// Eager loaded pages
-import Home from '@/pages/Home';
-import NotFound from '@/pages/NotFound';
-import Dashboard from '@/pages/Dashboard';
-import Notifications from '@/pages/Notifications';
-import Profile from '@/pages/Profile';
-
 import LoadingSpinner from '@/components/ui/LoadingSpinner';
+
+import Home from '@/pages/Home';
+import Dashboard from '@/pages/Dashboard';
+import NewFreightRequest from '@/pages/Freight/new';
+import FreightRequests from '@/pages/Freight/requests';
+import Profile from '@/pages/Profile';
+import Notifications from '@/pages/Notifications';
+import NotFound from '@/pages/NotFound';
 
 const withSuspense = (Component: React.ComponentType) => (
   <Suspense fallback={<LoadingSpinner />}>
@@ -60,14 +58,14 @@ export const routeConfig: RouteObject[] = [
       { path: 'dashboard', element: withSuspense(Dashboard) },
       { path: 'notificaciones', element: withSuspense(Notifications) },
       { path: 'mi-perfil', element: withSuspense(Profile) },
-      //{
-      //  path: 'freight',
-      //  children: [
-      //    { index: true, element: withSuspense(FreightRequests) },
-      //    { path: 'new', element: withSuspense(NewFreightRequest) },
-      //    { path: ':id', element: withSuspense(FreightDetails) },
-      //  ],
-      //},
+      {
+        path: 'fletes',
+        children: [
+          { index: true, element: withSuspense(FreightRequests) },
+          { path: 'nuevo', element: withSuspense(NewFreightRequest) },
+          //{ path: ':id', element: withSuspense(FreightDetails) },
+        ],
+      },
     ],
   },
 

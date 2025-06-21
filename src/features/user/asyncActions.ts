@@ -1,4 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
+import { toast } from 'react-toastify';
 import { isAxiosError } from '@/utils/isAxiosError';
 import { IUpdateUserProfileParams } from '@/interfaces/user';
 import { getNotifications } from '@/features/notifications/asyncActions';
@@ -29,8 +30,10 @@ export const updateUserProfile = createAsyncThunk(
   async (payload: IUpdateUserProfileParams, { rejectWithValue }) => {
     try {
       const { data } = await User.updateUserProfile(payload);
+      if (data) toast.success('Perfil actualizado con éxito');
       return data;
     } catch (error) {
+      toast.error('Error al actualizar el perfil');
       if (isAxiosError(error)) rejectWithValue(error.response?.data);
       return rejectWithValue('An unexpected error occurred');
     }

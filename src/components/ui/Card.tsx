@@ -6,31 +6,34 @@ interface CardProps {
   onClick?: () => void;
   hoverable?: boolean;
   variant?: 'default' | 'outline' | 'filled';
+  allowOverflow?: boolean;
 }
 
-const Card: React.FC<CardProps> = ({ 
-  children, 
-  className = '', 
-  onClick, 
-  hoverable = false, 
-  variant = 'default' 
-}) => {
-  
-  const baseStyles = 'rounded-lg overflow-hidden';
-  
+const Card = ({
+  children,
+  className = '',
+  onClick,
+  hoverable = false,
+  variant = 'default',
+  allowOverflow = false,
+}: CardProps) => {
+  const baseStyles = 'rounded-lg';
+
+  const overflowStyles = allowOverflow ? '' : 'overflow-hidden';
+
   const variantStyles = {
     default: 'bg-white shadow-md',
     outline: 'bg-white border border-gray-200',
     filled: 'bg-gray-50',
   };
-  
-  const hoverStyles = hoverable 
-    ? 'transition-transform transform hover:scale-[1.02] hover:shadow-lg cursor-pointer' 
+
+  const hoverStyles = hoverable
+    ? 'transition-transform transform hover:scale-[1.02] hover:shadow-lg cursor-pointer'
     : '';
-  
+
   return (
-    <div 
-      className={`${baseStyles} ${variantStyles[variant]} ${hoverStyles} ${className}`}
+    <div
+      className={`${baseStyles} ${overflowStyles} ${variantStyles[variant]} ${hoverStyles} ${className}`}
       onClick={onClick}
     >
       {children}

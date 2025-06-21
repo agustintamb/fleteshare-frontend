@@ -1,4 +1,27 @@
+import { FreightStatus } from '@/interfaces/freight';
 import { UserDocumentationsStatus } from '@/interfaces/user';
+
+export const statusOptions: { value: FreightStatus | 'all'; label: string; color: string }[] = [
+  { value: 'all', label: 'Todos', color: 'text-gray-600' },
+  { value: 'requested', label: 'Solicitado', color: 'text-blue-600' },
+  { value: 'taken', label: 'Tomado', color: 'text-yellow-600' },
+  { value: 'started', label: 'Iniciado', color: 'text-green-600' },
+  { value: 'going', label: 'En curso', color: 'text-green-600' },
+  { value: 'finished', label: 'Finalizado', color: 'text-gray-600' },
+  { value: 'canceled', label: 'Cancelado', color: 'text-red-600' },
+];
+
+export const statusConfig: Record<
+  FreightStatus,
+  { label: string; color: string; bgColor: string }
+> = {
+  requested: { label: 'Solicitado', color: 'text-blue-700', bgColor: 'bg-blue-100' },
+  taken: { label: 'Tomado', color: 'text-yellow-700', bgColor: 'bg-yellow-100' },
+  started: { label: 'Iniciado', color: 'text-green-700', bgColor: 'bg-green-100' },
+  going: { label: 'En curso', color: 'text-green-700', bgColor: 'bg-green-100' },
+  finished: { label: 'Finalizado', color: 'text-gray-700', bgColor: 'bg-gray-100' },
+  canceled: { label: 'Cancelado', color: 'text-red-700', bgColor: 'bg-red-100' },
+};
 
 export const getDocumentationStatusStyles = (status: UserDocumentationsStatus) => {
   switch (status) {

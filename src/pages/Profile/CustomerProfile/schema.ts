@@ -18,12 +18,15 @@ export const validationSchema = Yup.object().shape({
 
   address: Yup.object()
     .shape({
-      street: Yup.string().required('La calle es obligatoria'),
-      city: Yup.string().required('La ciudad es obligatoria'),
-      state: Yup.string().required('La provincia es obligatoria'),
-      country: Yup.string().required('El país es obligatorio'),
-      latitude: Yup.number().required('Las coordenadas son obligatorias'),
-      longitude: Yup.number().required('Las coordenadas son obligatorias'),
+      street: Yup.string().required(
+        'Parece que no hemos podido seleccionar la calle con precisión'
+      ),
+      latitude: Yup.number().required(
+        'Parece que no hemos podido seleccionar la ubicación con precisión'
+      ),
+      longitude: Yup.number().required(
+        'Parece que no hemos podido seleccionar la ubicación con precisión'
+      ),
       formattedAddress: Yup.string().required('La dirección formateada es obligatoria'),
     })
     .nullable(),

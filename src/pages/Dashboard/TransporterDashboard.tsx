@@ -82,12 +82,7 @@ export const TransporterDashboard = () => {
           <div className="space-y-4">
             {/* Show active/upcoming freights first */}
             {upcomingFreights.slice(0, 2).map(freight => (
-              <FreightCard
-                key={freight._id}
-                freight={freight}
-                showCompact={true}
-                showPriorityBadge={true}
-              />
+              <FreightCard key={freight._id} freight={freight} showCompact showPriorityBadge />
             ))}
 
             {/* Show other recent freights */}
@@ -95,7 +90,7 @@ export const TransporterDashboard = () => {
               .filter(freight => !upcomingFreights.includes(freight))
               .slice(0, 2)
               .map(freight => (
-                <FreightCard key={freight._id} freight={freight} showCompact={true} />
+                <FreightCard key={freight._id} freight={freight} showCompact />
               ))}
 
             {userFreights.length > 4 && (

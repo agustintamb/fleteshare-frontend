@@ -117,7 +117,7 @@ export const TransporterFreightRequests = () => {
         ) : (
           <>
             <div className="grid gap-4 mb-6">
-              {availableFreights
+              {[...availableFreights]
                 .sort((a, b) => {
                   // Sort by price per km (best opportunities first)
                   const aRate = a.totalPrice / (a.suggestedRoute?.totalDistance || 1);

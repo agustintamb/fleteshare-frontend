@@ -67,7 +67,6 @@ export const CustomerDashboard = () => {
                 key={freight._id}
                 freight={freight}
                 isOwner={freight.createdBy === freight.participants[0]?.userId}
-                //showCompact
               />
             ))}
 

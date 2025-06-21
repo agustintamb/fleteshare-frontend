@@ -2,7 +2,8 @@ import { useNavigate } from 'react-router-dom';
 import { IFreight } from '@/interfaces/freight';
 import { statusConfig } from '@/utils/status';
 import { formatARS } from '@/utils/currency';
-import { formatDateUTC } from '@/utils/time';
+import { useAuth } from '@/hooks/useAuth';
+import { formatDateUTC, getTimeAgo } from '@/utils/time';
 import {
   MapPin,
   Package,
@@ -20,8 +21,8 @@ interface FreightCardProps {
   freight: IFreight;
   isOwner?: boolean;
   showJoinButton?: boolean;
-  showCompact?: boolean; // New prop for dashboard compact view
-  showPriorityBadge?: boolean; // New prop to highlight important freights
+  showCompact?: boolean;
+  showPriorityBadge?: boolean;
 }
 
 export const FreightCard = ({
@@ -32,6 +33,8 @@ export const FreightCard = ({
   showPriorityBadge = false,
 }: FreightCardProps) => {
   const navigate = useNavigate();
+  const { isTransporter } = useAuth();
+
   const status = statusConfig[freight.status];
 
   // Get main pickup and delivery (from first participant)
@@ -55,6 +58,9 @@ export const FreightCard = ({
   const daysUntil = Math.ceil((freightDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   const isUpcoming = daysUntil >= 0 && daysUntil <= 7;
 
+  // Get time ago from creation
+  const timeAgoCreated = getTimeAgo(freight.createdAt.toString());
+
   const handleCardClick = () => navigate(`/fletes/${freight._id}`);
 
   const handleJoinClick = (e: React.MouseEvent) => {
@@ -77,7 +83,10 @@ export const FreightCard = ({
                 <Truck className="h-4 w-4 text-blue-600" />
               </div>
               <div>
-                <h4 className="font-medium text-gray-900 text-sm">#{freight._id.slice(-8)}</h4>
+                <div className="flex items-center gap-2 mb-1">
+                  <h4 className="font-medium text-gray-900 text-sm">#{freight._id.slice(-8)}</h4>
+                  <span className="text-xs text-gray-500">{timeAgoCreated}</span>
+                </div>
                 <div className="flex items-center gap-2">
                   <span
                     className={`px-2 py-0.5 rounded-full text-xs font-medium ${status.color} ${status.bgColor}`}
@@ -146,8 +155,13 @@ export const FreightCard = ({
               <Truck className="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">ID #{freight._id.slice(-8)}</h3>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h3 className="font-semibold text-gray-900">ID #{freight._id.slice(-8)}</h3>
+                <span className="text-sm text-gray-500 flex items-center gap-1">
+                  - {timeAgoCreated}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
                 <span
                   className={`px-2 py-1 rounded-full text-xs font-medium ${status.color} ${status.bgColor}`}
                 >
@@ -164,7 +178,7 @@ export const FreightCard = ({
                     Próximo ({daysUntil}d)
                   </span>
                 )}
-                {pricePerKm > 15000 && (
+                {isTransporter && pricePerKm > 15000 && (
                   <span className="px-2 py-1 rounded-full text-xs font-medium text-purple-700 bg-purple-100 flex items-center gap-1">
                     <TrendingUp className="h-3 w-3" />
                     Alto valor

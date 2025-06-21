@@ -34,41 +34,41 @@ const ScheduleStep = ({ formData, updateFormData }: ScheduleStepProps) => {
         {/* Mostrar fecha formateada */}
         {scheduledDate && scheduledDate >= minDate && (
           <div className="bg-green-50 p-3 rounded-md">
-            <p className="text-sm text-green-700">
-              <strong>Fecha seleccionada:</strong> {formattedDate}
-            </p>
-          </div>
-        )}
-
-        <div className="bg-yellow-50 p-4 rounded-md">
-          <div className="flex items-start">
-            <AlertCircle className="text-yellow-500 mr-2 mt-0.5" size={16} />
-            <div>
-              <h4 className="text-sm font-medium text-yellow-800 mb-1">Información Importante</h4>
-              <ul className="text-sm text-yellow-700 space-y-1">
-                <li>• La fecha debe ser al menos 24 horas en el futuro</li>
-                <li>• El horario exacto lo coordinarás con el transportista</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        {/* Mostrar errores de validación */}
-        {validation.errors && validation.errors.length > 0 && (
-          <div className="bg-red-50 p-4 rounded-md">
             <div className="flex items-start">
-              <AlertCircle className="text-red-500 mr-2 mt-0.5" size={16} />
+              <Calendar className="text-green-500 mr-2 mt-0.5" size={16} />
               <div>
-                <h4 className="text-sm font-medium text-red-800 mb-1">Errores de validación</h4>
-                <ul className="text-sm text-red-700 space-y-1">
-                  {validation.errors.map((error, index) => (
-                    <li key={index}>• {error}</li>
-                  ))}
-                </ul>
+                <p className="text-sm text-green-700">
+                  <strong>Fecha seleccionada:</strong> {formattedDate}
+                </p>
               </div>
             </div>
           </div>
         )}
+
+        {/* Mostrar errores de validación */}
+        {validation.errors && validation.errors.length > 0 && (
+          <div className="bg-red-50 p-3 rounded-md">
+            <div className="flex items-start">
+              <AlertCircle className="text-red-500 mr-2 mt-0.5" size={16} />
+              <div>
+                {validation.errors.map(error => (
+                  <p className="text-sm text-red-800">{error}</p>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="bg-yellow-50 p-3 rounded-md">
+          <div className="flex items-start">
+            <AlertCircle className="text-yellow-500 mr-2 mt-0.5" size={16} />
+            <div>
+              <p className="text-sm font-medium text-yellow-800">
+                El horario exacto lo coordinarás con el transportista
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </motion.div>
   );

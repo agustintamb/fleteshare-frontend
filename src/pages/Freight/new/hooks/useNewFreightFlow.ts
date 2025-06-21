@@ -26,7 +26,7 @@ export const useNewFreightFlow = () => {
       length: 0,
       description: '',
     },
-    scheduledDate: new Date().toISOString().split('T')[0],
+    scheduledDate: '',
   });
 
   const updateFormData = useCallback((updates: Partial<FreightFormData>) => {
@@ -87,7 +87,7 @@ export const useNewFreightFlow = () => {
           length: 0,
           description: '',
         },
-        scheduledDate: new Date().toISOString().split('T')[0],
+        scheduledDate: '',
       });
     };
   }, [currentUser]);

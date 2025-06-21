@@ -3,7 +3,7 @@ import { IFreight } from '@/interfaces/freight';
 import { statusConfig } from '@/utils/status';
 import { formatARS } from '@/utils/currency';
 import { useAuth } from '@/hooks/useAuth';
-import { formatDateUTC, getTimeAgo } from '@/utils/time';
+import { formatDateUTC, getStartOfDateUTC, getStartOfTodayUTC, getTimeAgo } from '@/utils/time';
 import {
   MapPin,
   Package,
@@ -53,8 +53,8 @@ export const FreightCard = ({
     : 0;
 
   // Check if freight is upcoming (within next 7 days)
-  const today = new Date();
-  const freightDate = new Date(freight.scheduledDate);
+  const today = getStartOfTodayUTC();
+  const freightDate = getStartOfDateUTC(freight.scheduledDate);
   const daysUntil = Math.ceil((freightDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
   const isUpcoming = daysUntil >= 0 && daysUntil <= 7;
 

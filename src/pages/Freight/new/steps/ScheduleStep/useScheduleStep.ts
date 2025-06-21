@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { FreightFormData, StepValidation } from '../../types';
-import { formatDateWithWeekday } from '@/utils/time';
+import { formatDateWithWeekday, getStartOfTodayUTC } from '@/utils/time';
 
 interface UseScheduleStepProps {
   formData: FreightFormData;
@@ -27,8 +27,7 @@ export const useScheduleStep = ({ formData, updateFormData }: UseScheduleStepPro
     const selectedDate = new Date(`${formData.scheduledDate}T12:00:00`);
 
     // Fecha de hoy a las 00:00:00 para comparación
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = getStartOfTodayUTC();
 
     // Fecha máxima (30 días desde hoy)
     const maxAllowedDate = new Date();
@@ -49,8 +48,7 @@ export const useScheduleStep = ({ formData, updateFormData }: UseScheduleStepPro
   }, [formData.scheduledDate]);
 
   const minDate = useMemo(() => {
-    // El mínimo es hoy, no mañana
-    const today = new Date();
+    const today = getStartOfTodayUTC();
     return today.toISOString().split('T')[0];
   }, []);
 

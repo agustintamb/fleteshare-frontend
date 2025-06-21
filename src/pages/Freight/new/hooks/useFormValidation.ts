@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { FormStep, FreightFormData, StepValidation } from '../types';
+import { getStartOfTodayUTC } from '@/utils/time';
 
 interface UseFormValidationProps {
   currentStep: FormStep;
@@ -78,8 +79,7 @@ export const useFormValidation = ({ currentStep, formData }: UseFormValidationPr
     const selectedDate = new Date(`${formData.scheduledDate}T12:00:00`);
 
     // Fecha de hoy a las 00:00:00 para comparación
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const today = getStartOfTodayUTC();
 
     // Fecha máxima (30 días desde hoy)
     const maxAllowedDate = new Date();

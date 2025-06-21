@@ -67,3 +67,34 @@ export const formatDateTimeUTC = (date: Date | string): string => {
 
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
+
+/**
+ * Obtiene el inicio del día actual en UTC (00:00:00.000Z)
+ * Útil para filtros que incluyan "desde hoy"
+ */
+export const getStartOfTodayUTC = (): Date => {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+};
+
+/**
+ * Obtiene el final del día actual en UTC (23:59:59.999Z)
+ * Útil para filtros que incluyan "hasta hoy"
+ */
+export const getEndOfTodayUTC = (): Date => {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999)
+  );
+};
+
+/**
+ * Obtiene el inicio de una fecha específica en UTC (00:00:00.000Z)
+ * @param date - Fecha a convertir (string ISO o Date object)
+ */
+export const getStartOfDateUTC = (date: string | Date): Date => {
+  const dateObj = new Date(date);
+  return new Date(
+    Date.UTC(dateObj.getUTCFullYear(), dateObj.getUTCMonth(), dateObj.getUTCDate(), 0, 0, 0, 0)
+  );
+};

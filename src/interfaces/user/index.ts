@@ -39,6 +39,7 @@ export interface ITransporterVehicleDimensions {
   width: number;
   length: number;
   height: number;
+  totalVolumeM3?: number;
 }
 
 export interface IUpdateUserProfileParams {

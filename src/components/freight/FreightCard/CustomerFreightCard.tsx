@@ -1,23 +1,10 @@
 import { useNavigate } from 'react-router-dom';
 import { IFreight } from '@/interfaces/freight';
 import { statusConfig } from '@/utils/status';
-import { formatARS } from '@/utils/currency';
-import { useAuth } from '@/hooks/useAuth';
 import { formatDateUTC, getStartOfDateUTC, getStartOfTodayUTC, getTimeAgo } from '@/utils/time';
-import {
-  MapPin,
-  Package,
-  Calendar,
-  Users,
-  Truck,
-  DollarSign,
-  ChevronRight,
-  Clock,
-  Star,
-  TrendingUp,
-} from 'lucide-react';
+import { MapPin, Package, Calendar, Users, Truck, ChevronRight, Clock, Star } from 'lucide-react';
 
-interface FreightCardProps {
+interface CustomerFreightCardProps {
   freight: IFreight;
   isOwner?: boolean;
   showJoinButton?: boolean;
@@ -25,15 +12,14 @@ interface FreightCardProps {
   showPriorityBadge?: boolean;
 }
 
-export const FreightCard = ({
+export const CustomerFreightCard = ({
   freight,
   isOwner = false,
   showJoinButton = false,
   showCompact = false,
   showPriorityBadge = false,
-}: FreightCardProps) => {
+}: CustomerFreightCardProps) => {
   const navigate = useNavigate();
-  const { isTransporter } = useAuth();
 
   const status = statusConfig[freight.status];
 
@@ -47,11 +33,6 @@ export const FreightCard = ({
     ? Math.round((freight.usedVolumeM3 / freight.assignedVehicle.dimensions.totalVolumeM3) * 100)
     : 0;
 
-  // Calculate price per km for transporters
-  const pricePerKm = freight.suggestedRoute?.totalDistance
-    ? Math.round(freight.totalPrice / freight.suggestedRoute.totalDistance)
-    : 0;
-
   // Check if freight is upcoming (within next 7 days)
   const today = getStartOfTodayUTC();
   const freightDate = getStartOfDateUTC(freight.scheduledDate);
@@ -60,6 +41,9 @@ export const FreightCard = ({
 
   // Get time ago from creation
   const timeAgoCreated = getTimeAgo(freight.createdAt.toString());
+
+  // Show vehicle info only if status is 'taken' or higher (has assigned vehicle)
+  const showVehicleInfo = freight.status !== 'requested' && freight.assignedVehicle;
 
   const handleCardClick = () => navigate(`/fletes/${freight._id}`);
 
@@ -123,19 +107,32 @@ export const FreightCard = ({
             <div className="flex items-center gap-3">
               <span>{formatDateUTC(freight.scheduledDate)}</span>
               <span>{freight.participants.length} part.</span>
-              {freight.suggestedRoute?.totalDistance && (
-                <span>{freight.suggestedRoute.totalDistance}km</span>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              {pricePerKm > 0 && (
-                <span className="text-green-600 font-medium">
-                  ${pricePerKm.toLocaleString('es-AR')}/km
-                </span>
-              )}
-              <span className="font-medium text-gray-900">{formatARS(freight.totalPrice)}</span>
             </div>
           </div>
+
+          {/* Vehicle info for compact view */}
+          {showVehicleInfo && (
+            <div className="mt-3 pt-3 border-t border-gray-100">
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-medium text-gray-600">
+                  Vehículo: {freight.assignedVehicle!.plate}
+                </span>
+                <span className="text-xs text-gray-500">{volumeUsagePercentage}% ocupado</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-1.5">
+                <div
+                  className={`h-1.5 rounded-full ${
+                    volumeUsagePercentage >= 90
+                      ? 'bg-red-500'
+                      : volumeUsagePercentage >= 70
+                      ? 'bg-yellow-500'
+                      : 'bg-green-500'
+                  }`}
+                  style={{ width: `${volumeUsagePercentage}%` }}
+                ></div>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -178,12 +175,6 @@ export const FreightCard = ({
                     Próximo ({daysUntil}d)
                   </span>
                 )}
-                {isTransporter && pricePerKm > 15000 && (
-                  <span className="px-2 py-1 rounded-full text-xs font-medium text-purple-700 bg-purple-100 flex items-center gap-1">
-                    <TrendingUp className="h-3 w-3" />
-                    Alto valor
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -201,13 +192,10 @@ export const FreightCard = ({
             <MapPin className="h-4 w-4 text-red-500" />
             <span className="font-medium">{deliveryCity}</span>
           </div>
-          {freight.suggestedRoute?.totalDistance && (
-            <div className="text-sm text-gray-500">{freight.suggestedRoute.totalDistance}km</div>
-          )}
         </div>
 
-        {/* Details Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        {/* Details Grid - Customer focused */}
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           {/* Date */}
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4 text-gray-400" />
@@ -238,27 +226,14 @@ export const FreightCard = ({
               </div>
             </div>
           </div>
-
-          {/* Price */}
-          <div className="flex items-center gap-2">
-            <DollarSign className="h-4 w-4 text-gray-400" />
-            <div>
-              <div className="text-xs text-gray-500">
-                Total {pricePerKm > 0 && `(${pricePerKm.toLocaleString('es-AR')}/km)`}
-              </div>
-              <div className="text-sm font-medium text-gray-900">
-                {formatARS(freight.totalPrice)}
-              </div>
-            </div>
-          </div>
         </div>
 
-        {/* Vehicle Status (if assigned) */}
-        {freight.assignedVehicle && (
+        {/* Vehicle Status - only shown when status is 'taken' or higher */}
+        {showVehicleInfo && (
           <div className="mb-4 p-3 bg-gray-50 rounded-lg">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-700">
-                Vehículo: {freight.assignedVehicle.plate}
+                Vehículo: {freight.assignedVehicle!.plate}
               </span>
               <span className="text-sm text-gray-600">{volumeUsagePercentage}% ocupado</span>
             </div>
@@ -276,7 +251,7 @@ export const FreightCard = ({
             </div>
             <div className="text-xs text-gray-500 mt-1">
               {freight.usedVolumeM3.toFixed(1)}m³ /{' '}
-              {freight.assignedVehicle.dimensions.totalVolumeM3.toFixed(1)}m³
+              {freight.assignedVehicle!.dimensions.totalVolumeM3.toFixed(1)}m³
             </div>
           </div>
         )}

@@ -1,9 +1,5 @@
 export type NotificationType = 'info' | 'warning' | 'success' | 'error';
 
-export interface IGetNotificationsParams {
-  query?: IGetNotificationsQuery;
-}
-
 export interface IGetNotificationsResponse {
   message: string;
   result: {

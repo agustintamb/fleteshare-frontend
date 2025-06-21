@@ -1,16 +1,17 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { IAddress, ISearchResult } from '@/interfaces/freight';
+import { IAddress, ISearchResult } from '@/interfaces/address';
 
 interface UseAddressSearchProps {
   currentAddress?: IAddress | null;
-  isModalOpen?: boolean;
+  isOpen?: boolean;
 }
 
-export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSearchProps) => {
+export const useAddressSearch = ({ currentAddress, isOpen = true }: UseAddressSearchProps) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<ISearchResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [notFoundError, setNotFoundError] = useState<string | null>(null);
   const [selectedAddress, setSelectedAddress] = useState<IAddress | null>(currentAddress || null);
   const [selectedPosition, setSelectedPosition] = useState<[number, number] | null>(
     currentAddress ? [currentAddress.latitude, currentAddress.longitude] : null
@@ -21,7 +22,7 @@ export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSear
 
   // Resetear el estado cuando se abre el modal
   useEffect(() => {
-    if (isModalOpen) {
+    if (isOpen) {
       // Resetear al estado inicial basado en currentAddress
       setSelectedAddress(currentAddress || null);
       setSelectedPosition(
@@ -37,7 +38,7 @@ export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSear
         }, 100); // Pequeño delay para asegurar que el mapa esté renderizado
       }
     }
-  }, [isModalOpen, currentAddress]);
+  }, [isOpen, currentAddress]);
 
   // Función para buscar direcciones usando Nominatim
   const searchAddresses = useCallback(async (query: string) => {
@@ -58,7 +59,13 @@ export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSear
         )}`
       );
       const data: ISearchResult[] = await response.json();
-      setSearchResults(data.reverse().slice(0, 3)); // Invertir el orden y limitar a 3 resultados
+
+      // Filtrar resultados que tengan calle y limitar a 3
+      const filteredResults = data
+        .filter(result => result.address?.road)
+        .reverse()
+        .slice(0, 3);
+      setSearchResults(filteredResults);
     } catch (error) {
       console.error('Error searching addresses:', error);
       setSearchResults([]);
@@ -89,10 +96,24 @@ export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSear
           neighborhood: data.address.neighbourhood || '',
         };
         setSelectedAddress(address);
+        validateSelectedAddress(address);
       }
     } catch (error) {
       console.error('Error reverse geocoding:', error);
     }
+  }, []);
+
+  const validateSelectedAddress = useCallback((address: IAddress | null) => {
+    if (!address) {
+      setNotFoundError(null);
+    } else if (
+      !address.street ||
+      !address.latitude ||
+      !address.longitude ||
+      !address.formattedAddress
+    ) {
+      setNotFoundError('Parece que no hemos podido seleccionar la dirección con precisión.');
+    } else setNotFoundError(null);
   }, []);
 
   // Función para centrar el mapa en una posición específica
@@ -124,6 +145,7 @@ export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSear
       };
 
       setSelectedAddress(address);
+      validateSelectedAddress(address);
       setSearchResults([]);
       setSearchQuery('');
 
@@ -166,6 +188,7 @@ export const useAddressSearch = ({ currentAddress, isModalOpen }: UseAddressSear
     isSearching,
     selectedPosition,
     selectedAddress,
+    notFoundError,
 
     // Funciones
     handleResultSelect,

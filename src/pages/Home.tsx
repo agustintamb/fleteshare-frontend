@@ -4,7 +4,7 @@ import { Truck, Package, Star, MessageSquare, Award, TrendingUp } from 'lucide-r
 import { ROUTES } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
-import AuthModal from '@/pages/auth/AuthModal';
+import AuthModal from '@/pages/Auth/AuthModal';
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },

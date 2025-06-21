@@ -1,7 +1,7 @@
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/app/store';
 import { useAuth } from '@/hooks/useAuth';
-import { IAddress } from '@/interfaces/freight';
+import { IAddress } from '@/interfaces/address';
 import { IUpdateUserProfileParams } from '@/interfaces/user';
 import { updateUserProfile } from '@/features/user/asyncActions';
 

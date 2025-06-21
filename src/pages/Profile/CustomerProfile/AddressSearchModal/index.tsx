@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import { Search, MapPin } from 'lucide-react';
+import { IAddress } from '@/interfaces/address';
+import { useAddressSearch } from '@/hooks/useAddressSearch';
 import Modal from '@/components/ui/Modal';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
-import { IAddress } from '@/interfaces/freight';
-import { useAddressSearch } from './useAddressSearch';
 import 'leaflet/dist/leaflet.css';
 
 // Fix para los iconos de Leaflet
@@ -22,7 +21,7 @@ Icon.Default.mergeOptions({
 interface AddressSearchModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onAddressSelect: (address: IAddress) => void;
+  onAddressSelect: (address: IAddress | null) => void;
   currentAddress?: IAddress | null;
 }
 
@@ -40,7 +39,7 @@ const MapClickHandler: React.FC<{
 
 // Componente para establecer la referencia del mapa
 const MapRefSetter: React.FC<{
-  setMapRef: (map: any) => void;
+  setMapRef: (map: unknown) => void;
 }> = ({ setMapRef }) => {
   const map = useMapEvents({});
 
@@ -51,12 +50,12 @@ const MapRefSetter: React.FC<{
   return null;
 };
 
-const AddressSearchModal: React.FC<AddressSearchModalProps> = ({
+const AddressSearchModal = ({
   isOpen,
   onClose,
   onAddressSelect,
   currentAddress,
-}) => {
+}: AddressSearchModalProps) => {
   const {
     searchQuery,
     setSearchQuery,
@@ -64,12 +63,13 @@ const AddressSearchModal: React.FC<AddressSearchModalProps> = ({
     isSearching,
     selectedPosition,
     selectedAddress,
+    notFoundError,
     handleResultSelect,
     handleMapClick,
     setMapRef,
   } = useAddressSearch({
     currentAddress,
-    isModalOpen: isOpen, // Pasar el estado del modal al hook
+    isOpen,
   });
 
   // Confirmar selección de dirección
@@ -86,7 +86,11 @@ const AddressSearchModal: React.FC<AddressSearchModalProps> = ({
       <Button variant="outline" onClick={onClose}>
         Cancelar
       </Button>
-      <Button variant="primary" onClick={handleConfirm} disabled={!selectedAddress}>
+      <Button
+        variant="primary"
+        onClick={handleConfirm}
+        disabled={!selectedAddress || Boolean(notFoundError)}
+      >
         Aceptar
       </Button>
     </>
@@ -100,16 +104,6 @@ const AddressSearchModal: React.FC<AddressSearchModalProps> = ({
       size="xl"
       actions={modalActions}
     >
-      {/* Texto informativo */}
-      <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-        <div className="flex items-start gap-2">
-          <MapPin size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
-          <div className="text-sm text-blue-800">
-            <p>Buscá la dirección en el campo de búsqueda o hace clic directamente en el mapa.</p>
-          </div>
-        </div>
-      </div>
-
       {/* Mapa más grande */}
       <div className="mb-4 h-80 border border-gray-200 rounded-md overflow-hidden">
         <MapContainer
@@ -126,6 +120,37 @@ const AddressSearchModal: React.FC<AddressSearchModalProps> = ({
           {selectedPosition && <Marker position={selectedPosition} />}
         </MapContainer>
       </div>
+
+      {/* Conditional informational text based on address state */}
+      {!selectedAddress ? (
+        <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+          <div className="flex items-start gap-2">
+            <MapPin size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-blue-800">
+              <p>Buscá la dirección en el campo de búsqueda o hace clic directamente en el mapa.</p>
+            </div>
+          </div>
+        </div>
+      ) : notFoundError ? (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+          <div className="flex items-start gap-2">
+            <MapPin size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-red-800">
+              <p>{notFoundError}</p>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
+          <div className="flex items-start gap-2">
+            <MapPin size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
+            <div className="text-sm text-green-800">
+              <p>Dirección seleccionada:</p>
+              <p className="font-medium">{selectedAddress.formattedAddress}</p>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Buscador */}
       <div className="mb-4 relative">
@@ -159,52 +184,6 @@ const AddressSearchModal: React.FC<AddressSearchModalProps> = ({
               </div>
             </button>
           ))}
-        </div>
-      )}
-
-      {/* Información de la dirección seleccionada */}
-      {selectedAddress && (
-        <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="font-medium text-gray-900">Dirección Seleccionada:</h3>
-            <a
-              href={`https://www.google.com/maps?q=${selectedAddress.latitude},${selectedAddress.longitude}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-xs text-blue-600 hover:text-blue-800 underline flex items-center gap-1"
-            >
-              <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  fillRule="evenodd"
-                  d="M4.25 5.5a.75.75 0 00-.75.75v8.5c0 .414.336.75.75.75h8.5a.75.75 0 00.75-.75v-4a.75.75 0 011.5 0v4A2.25 2.25 0 0112.75 17h-8.5A2.25 2.25 0 012 14.75v-8.5A2.25 2.25 0 014.25 4h5a.75.75 0 010 1.5h-5z"
-                  clipRule="evenodd"
-                />
-                <path
-                  fillRule="evenodd"
-                  d="M6.194 12.753a.75.75 0 001.06.053L16.5 4.44v2.81a.75.75 0 001.5 0v-4.5a.75.75 0 00-.75-.75h-4.5a.75.75 0 000 1.5h2.553l-9.056 8.194a.75.75 0 00-.053 1.06z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              Ver en Google Maps
-            </a>
-          </div>
-          <p className="text-sm text-gray-700 mb-2">{selectedAddress.formattedAddress}</p>
-          <div className="grid grid-cols-2 gap-3 text-xs">
-            <div className="bg-white p-2 rounded border">
-              <span className="text-gray-500 block">Latitud:</span>
-              <span className="font-mono text-gray-900">{selectedAddress.latitude.toFixed(6)}</span>
-            </div>
-            <div className="bg-white p-2 rounded border">
-              <span className="text-gray-500 block">Longitud:</span>
-              <span className="font-mono text-gray-900">
-                {selectedAddress.longitude.toFixed(6)}
-              </span>
-            </div>
-          </div>
-          <div className="mt-2 text-xs text-gray-500">
-            💡 Tip: Hacé click en "Ver en Google Maps" para verificar por medio de una segunda
-            fuente que la dirección es la correcta.
-          </div>
         </div>
       )}
     </Modal>

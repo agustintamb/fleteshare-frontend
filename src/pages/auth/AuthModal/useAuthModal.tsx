@@ -1,6 +1,6 @@
-import Login from '@/pages/auth/Login';
-import Register from '@/pages/auth/Register';
-import RecoverPassword from '@/pages/auth/RecoverPassword';
+import Login from '@/pages/Auth/Login';
+import Register from '@/pages/Auth/Register';
+import RecoverPassword from '@/pages/Auth/RecoverPassword';
 
 interface UseAuthModalProps {
   type: 'login' | 'register' | 'recover';

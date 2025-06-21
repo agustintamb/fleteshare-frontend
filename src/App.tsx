@@ -10,13 +10,12 @@ const App = () => {
     <>
       <RouterProvider router={router} />
       <ToastContainer
-        position="top-right"
+        position="bottom-left"
         autoClose={3000}
         hideProgressBar
         newestOnTop
         closeOnClick
         pauseOnFocusLoss
-        draggable
         pauseOnHover
       />
     </>

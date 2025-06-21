@@ -1,29 +1,178 @@
-export interface IAddress {
-  city: string;
-  country: string;
-  formattedAddress: string;
-  latitude: number;
-  longitude: number;
-  neighborhood?: string;
-  number?: string;
-  postalCode?: string;
-  state: string;
-  street: string;
+import { IAddress, ICoordinates } from '@/interfaces/address';
+
+export type FreightStatus = 'requested' | 'taken' | 'started' | 'going' | 'finished' | 'canceled';
+
+export interface FreightFilters {
+  search: string;
+  status: FreightStatus | 'all';
+  dateFrom: string;
+  dateTo: string;
 }
 
-export interface ISearchResult {
-  display_name: string;
-  lat: string;
-  lon: string;
-  address: {
-    house_number?: string;
-    road?: string;
-    neighbourhood?: string;
-    city?: string;
-    town?: string;
-    village?: string;
-    state?: string;
-    country?: string;
-    postcode?: string;
+export interface IPackageDimensions {
+  length: number; // cm
+  width: number; // cm
+  height: number; // cm
+  volumeM3?: number; // calculado automáticamente por el backend
+}
+
+export interface IFreightParticipant {
+  userId: string;
+  pickupAddress: IAddress;
+  deliveryAddress: IAddress;
+  packageDimensions: IPackageDimensions;
+  price: number;
+  distance: number;
+  joinedAt: Date;
+}
+
+export interface IVehicleDimensions {
+  length: number;
+  width: number;
+  height: number;
+  totalVolumeM3: number;
+}
+
+export interface IAssignedVehicle {
+  plate: string;
+  dimensions: IVehicleDimensions;
+}
+
+export interface IRoutePoint {
+  participantIndex: number;
+  address: IAddress;
+  estimatedTime?: Date;
+}
+
+export interface ISuggestedRoute {
+  pickupSequence: IRoutePoint[];
+  deliverySequence: IRoutePoint[];
+  totalDistance: number;
+}
+
+export interface IFreight {
+  _id: string;
+  createdBy: string;
+  participants: IFreightParticipant[];
+  transporterId?: string;
+  status: FreightStatus;
+  assignedVehicle?: IAssignedVehicle;
+  totalPrice: number;
+  usedVolumeM3: number;
+  availableVolumeM3: number;
+  scheduledDate: Date;
+  startedAt?: Date;
+  completedAt?: Date;
+  cancelledAt?: Date;
+  cancellationReason?: string;
+  suggestedRoute?: ISuggestedRoute;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface PriceCalculation {
+  volumePrice: number;
+  distancePrice: number;
+  totalPrice: number;
+  volumeM3: number;
+  distanceKm: number;
+  packageDimensions: IPackageDimensions;
+  distance: number;
+}
+
+export interface FreightValidation {
+  canJoin: boolean;
+  reasons: string[];
+  availableVolumeM3?: number;
+  packageVolumeM3: number;
+}
+
+export interface FreightFormData {
+  pickup: IAddress;
+  delivery: IAddress;
+  packageDetails: {
+    width: number;
+    height: number;
+    length: number;
+    description: string;
   };
+  scheduledDate: string;
+}
+
+export interface CalculatePriceRequest {
+  packageDimensions: Omit<IPackageDimensions, 'volumeM3'>;
+  pickupAddress: ICoordinates;
+  deliveryAddress: ICoordinates;
+}
+
+export interface CreateFreightRequest {
+  pickupAddress: IAddress;
+  deliveryAddress: IAddress;
+  packageDimensions: Omit<IPackageDimensions, 'volumeM3'>; // volumeM3 se calcula automáticamente
+  scheduledDate: string; // ISO string
+}
+
+export interface JoinFreightRequest {
+  freightId: string;
+  pickupAddress: IAddress;
+  deliveryAddress: IAddress;
+  packageDimensions: Omit<IPackageDimensions, 'volumeM3'>;
+}
+
+export interface JoinFreightParams {
+  freightId: string;
+  joinData: Omit<JoinFreightRequest, 'freightId'>;
+}
+
+export interface CreateFreightResponse {
+  message: string;
+  result: IFreight;
+}
+
+export interface IFreightsWithPagination {
+  freights: IFreight[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+  };
+}
+
+export interface FreightListResponse {
+  message: string;
+  result: IFreightsWithPagination;
+}
+
+export interface FreightDetailResponse {
+  message: string;
+  result: IFreight;
+}
+
+export interface ValidateJoinFreightParams {
+  freightId: string;
+  validationData: {
+    pickupAddress: IAddress;
+    deliveryAddress: IAddress;
+    packageDimensions: Omit<IPackageDimensions, 'volumeM3'>;
+  };
+}
+
+export interface GetUserFreightsQuery {
+  page?: number;
+  limit?: number;
+  status?: string;
+  scheduledDateFrom?: string;
+  scheduledDateTo?: string;
+}
+
+export interface GetFreightsQuery {
+  page?: number;
+  limit?: number;
+  status?: FreightStatus | 'all';
+  scheduledDateFrom?: string;
+  scheduledDateTo?: string;
+  maxDistance?: number;
+  userLat?: number;
+  userLng?: number;
 }

@@ -1,4 +1,4 @@
-import { IAddress } from '@/interfaces/freight';
+import { IAddress } from '@/interfaces/address';
 
 export type UserRole = 'customer' | 'transporter';
 export type UserDocumentationsStatus = 'pending' | 'approved' | 'rejected';

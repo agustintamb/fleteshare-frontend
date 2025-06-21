@@ -1,21 +1,13 @@
 import { useState } from 'react';
 import { User, Mail, Phone, MapPin, Plus, Edit3 } from 'lucide-react';
-import { Form, Formik, FormikProps } from 'formik';
+import { Form, Formik } from 'formik';
 import { validationSchema } from './schema';
 import { useAuth } from '@/hooks/useAuth';
 import { useCustomerProfile } from './useCustomerProfile';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
 import AddressSearchModal from './AddressSearchModal';
-import { IAddress } from '@/interfaces/freight';
-
-interface ICustomerProfileValues {
-  firstName: string;
-  lastName: string;
-  phone: string;
-  username: string;
-  address: IAddress | null;
-}
+import { IAddress } from '@/interfaces/address';
 
 const CustomerProfile = () => {
   const { currentUser } = useAuth();
@@ -66,7 +58,7 @@ const CustomerProfile = () => {
                 setSubmitting(false);
               }}
             >
-              {(formik: FormikProps<ICustomerProfileValues>) => (
+              {formik => (
                 <>
                   <Form className="space-y-6">
                     {/* Información Personal */}
@@ -216,8 +208,8 @@ const CustomerProfile = () => {
                               </div>
                               <div className="flex justify-between items-end">
                                 <div className="flex gap-4 text-xs text-gray-500">
-                                  <span>Lat: {formik.values.address.latitude.toFixed(6)}</span>
-                                  <span>Lng: {formik.values.address.longitude.toFixed(6)}</span>
+                                  <span>Lat: {formik.values.address.latitude?.toFixed(6)}</span>
+                                  <span>Lng: {formik.values.address.longitude?.toFixed(6)}</span>
                                 </div>
                                 <div className="text-xs text-gray-400">
                                   💡 Verificá en Google Maps
@@ -238,7 +230,7 @@ const CustomerProfile = () => {
                         <div className="mt-2 text-sm text-red-600">
                           {typeof formik.errors.address === 'string'
                             ? formik.errors.address
-                            : 'La dirección es requerida'}
+                            : Object.values(formik.errors.address).join(', ')}
                         </div>
                       )}
                     </div>
@@ -248,7 +240,7 @@ const CustomerProfile = () => {
                         type="submit"
                         variant="primary"
                         isLoading={isLoading}
-                        disabled={formik.isSubmitting || !formik.dirty}
+                        disabled={formik.isSubmitting || !formik.dirty || !formik.isValid}
                         className="w-full md:w-auto"
                       >
                         Guardar Cambios
@@ -260,12 +252,11 @@ const CustomerProfile = () => {
                   <AddressSearchModal
                     isOpen={isAddressModalOpen}
                     onClose={() => setIsAddressModalOpen(false)}
-                    onAddressSelect={(address: IAddress) => {
+                    currentAddress={formik.values.address}
+                    onAddressSelect={(address: IAddress | null) => {
                       formik.setFieldValue('address', address);
                       formik.setFieldTouched('address', true);
-                      setIsAddressModalOpen(false);
                     }}
-                    currentAddress={formik.values.address}
                   />
                 </>
               )}

@@ -4,12 +4,14 @@ import auth from '@/features/auth';
 import user from '@/features/user';
 import layout from '@/features/layout';
 import notifications from '@/features/notifications';
+import freights from '@/features/freights';
 
 export const reducer = combineReducers({
   auth,
   user,
   layout,
   notifications,
+  freights,
 });
 
 const store = configureStore({

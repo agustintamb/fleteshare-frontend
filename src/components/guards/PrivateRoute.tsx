@@ -9,11 +9,19 @@ import Button from '@/components/ui/Button';
 
 const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
   const dispatch: AppDispatch = useDispatch();
-  const { currentUser, isSessionExpired, handleLogout } = useAuth();
+  const { currentUser, isSessionExpired, handleLogout, isLoading } = useAuth();
 
   useEffect(() => {
     if (!currentUser) dispatch(getCurrentUser());
   }, [currentUser, dispatch]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <span>Cargando...</span>
+      </div>
+    );
+  }
 
   return (
     <div>

@@ -4,6 +4,8 @@ import { Plus, Package, Users } from 'lucide-react';
 import { ROUTES } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import Button from '@/components/ui/Button';
+import { CustomerDashboard } from './CustomerDashboard';
+import { TransporterDashboard } from './TransporterDashboard';
 
 const Dashboard: React.FC = () => {
   const { currentUser, isCustomer, isTransporter } = useAuth();
@@ -17,7 +19,7 @@ const Dashboard: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Bienvenido, {currentUser?.firstName}
+              Hola {currentUser?.firstName}!
             </h1>
             <p className="text-gray-600 mt-1">
               {isCustomer && '¿Necesitas enviar algo hoy?'}
@@ -34,7 +36,7 @@ const Dashboard: React.FC = () => {
                 </Link>
                 <Link to={ROUTES.FREIGHT}>
                   <Button variant="outline" icon={<Users size={18} />}>
-                    Unirse a un flete compartido
+                    Ver todas las solicitudes
                   </Button>
                 </Link>
               </>
@@ -49,6 +51,10 @@ const Dashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Dashboard content based on user role */}
+      {isCustomer && <CustomerDashboard />}
+      {isTransporter && <TransporterDashboard />}
     </div>
   );
 };

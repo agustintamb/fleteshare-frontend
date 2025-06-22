@@ -1,6 +1,6 @@
 import { IAddress, ICoordinates } from '@/interfaces/address';
 
-export type FreightStatus = 'requested' | 'taken' | 'started' | 'going' | 'finished' | 'canceled';
+export type FreightStatus = 'requested' | 'taken' | 'started' | 'finished' | 'canceled';
 
 export interface FreightFilters {
   search: string;

@@ -286,7 +286,7 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                           point.visited
                             ? 'bg-green-500 text-white'
-                            : index === 0 && ['started', 'going'].includes(freight.status)
+                            : index === 0 && freight.status === 'started'
                             ? 'bg-blue-500 text-white'
                             : 'bg-gray-200 text-gray-600'
                         }`}

@@ -172,11 +172,6 @@ export const TransporterFreightDetails = ({ currentUser }: TransporterFreightDet
                   </Button>
                 )}
                 {freight.status === 'started' && (
-                  <Button variant="primary" size="lg">
-                    Marcar en curso
-                  </Button>
-                )}
-                {freight.status === 'going' && (
                   <Button variant="success" size="lg">
                     Finalizar flete
                   </Button>
@@ -215,7 +210,7 @@ export const TransporterFreightDetails = ({ currentUser }: TransporterFreightDet
                         className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${
                           point.visited
                             ? 'bg-green-500 text-white'
-                            : index === 0 && ['started', 'going'].includes(freight.status)
+                            : index === 0 && freight.status === 'started'
                             ? 'bg-blue-500 text-white'
                             : 'bg-gray-200 text-gray-600'
                         }`}

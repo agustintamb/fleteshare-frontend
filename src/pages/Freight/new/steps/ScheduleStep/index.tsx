@@ -51,8 +51,10 @@ const ScheduleStep = ({ formData, updateFormData }: ScheduleStepProps) => {
             <div className="flex items-start">
               <AlertCircle className="text-red-500 mr-2 mt-0.5" size={16} />
               <div>
-                {validation.errors.map(error => (
-                  <p className="text-sm text-red-800">{error}</p>
+                {validation.errors.map((error, index) => (
+                  <p key={index} className="text-sm text-red-800">
+                    {error}
+                  </p>
                 ))}
               </div>
             </div>

@@ -222,7 +222,7 @@ export const CustomerFreightCard = ({
             <div>
               <div className="text-xs text-gray-500">Volumen</div>
               <div className="text-sm font-medium text-gray-900">
-                {freight.usedVolumeM3.toFixed(1)}m³
+                {freight.usedVolumeM3}m³
               </div>
             </div>
           </div>

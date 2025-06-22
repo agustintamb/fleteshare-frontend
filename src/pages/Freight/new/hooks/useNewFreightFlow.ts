@@ -67,7 +67,7 @@ export const useNewFreightFlow = () => {
       dispatch(createFreight(freightRequest))
         .unwrap()
         .then(response => {
-          if (response.result) navigate(`/freight/${response.result._id}`);
+          if (response.result) navigate(`/fletes/${response.result._id}`);
         });
     } catch (error) {
       console.error('Error creating freight request:', error);

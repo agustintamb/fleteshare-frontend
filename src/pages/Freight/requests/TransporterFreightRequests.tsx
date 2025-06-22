@@ -23,6 +23,9 @@ export const TransporterFreightRequests = () => {
     refetchUserFreights,
   } = useFreightRequests();
 
+  const activeFilters =
+    availableFilters.search.trim() || availableFilters.dateFrom || availableFilters.dateTo;
+
   if (isLoading && isLoadingUserFreights) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -58,7 +61,8 @@ export const TransporterFreightRequests = () => {
 
       {/* Available Freights Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+          {/* Título y descripción */}
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-50 rounded-lg">
               <Truck className="h-5 w-5 text-green-600" />
@@ -70,42 +74,43 @@ export const TransporterFreightRequests = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={refetchAvailableFreights}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </button>
-        </div>
 
-        {/* Filters */}
-        <div className="mb-6">
-          <FreightFilters
-            filters={availableFilters}
-            onFiltersChange={updateAvailableFilters}
-            onReset={resetAvailableFilters}
-            title="Filtros de solicitudes"
-            showSearchPlaceholder="Buscar solicitudes por ID o ciudad..."
-          />
+          {/* Filtros y refresh button */}
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:min-w-0 lg:flex-1 lg:max-w-2xl lg:ml-6">
+            {/* Filtros compactos */}
+            <div className="lg:order-1 lg:flex-1">
+              <FreightFilters
+                filters={availableFilters}
+                onFiltersChange={updateAvailableFilters}
+                onReset={resetAvailableFilters}
+                title="Filtros de solicitudes"
+                showSearchPlaceholder="Buscar solicitudes por ID o ciudad..."
+                compact={true}
+              />
+            </div>
+          </div>
         </div>
 
         {availableFreights.length === 0 ? (
           <div className="text-center py-12">
             <Truck className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">
-              No hay solicitudes disponibles
+              {activeFilters ? 'No se encontraron solicitudes' : 'No hay solicitudes disponibles'}
             </h3>
             <p className="text-gray-600 mb-4">
-              No encontramos solicitudes de flete que coincidan con tus filtros. <br /> Prueba
-              ajustar los criterios de búsqueda.
+              {activeFilters
+                ? 'Probá ajustando tus filtros de búsqueda.'
+                : 'No encontramos solicitudes de flete disponibles en este momento.'}
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <button
-                onClick={resetAvailableFilters}
-                className="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors"
-              >
-                Limpiar filtros
-              </button>
+              {activeFilters && (
+                <button
+                  onClick={resetAvailableFilters}
+                  className="px-4 py-2 text-blue-600 hover:text-blue-700 transition-colors"
+                >
+                  Limpiar filtros
+                </button>
+              )}
               <button
                 onClick={refetchAvailableFreights}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
@@ -164,6 +169,10 @@ export const TransporterFreightRequests = () => {
           <div className="text-center py-12">
             <Package className="h-12 w-12 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-medium text-gray-900 mb-2">Aún no tomaste ningún flete</h3>
+            <p className="text-gray-600 mb-6">
+              No tienes fletes asignados aún. <br />
+              ¡Explora las solicitudes disponibles y toma tu primer flete!
+            </p>
           </div>
         ) : (
           <>

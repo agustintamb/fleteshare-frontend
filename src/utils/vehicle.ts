@@ -1,5 +1,3 @@
-// Agregar estos métodos a tu archivo freightUtils.ts existente
-
 import { IFreight } from '@/interfaces/freight';
 import { ITransporterVehicle } from '@/interfaces/user';
 

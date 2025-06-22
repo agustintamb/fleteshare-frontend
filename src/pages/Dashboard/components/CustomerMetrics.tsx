@@ -59,7 +59,7 @@ export const CustomerMetrics = ({ userFreights, allFreights }: CustomerMetricsPr
           </div>
           <div>
             <div className="text-2xl font-bold text-blue-900">{upcomingFreights}</div>
-            <div className="text-sm text-blue-700">
+            <div className="text-xs text-blue-700">
               {upcomingFreights === 1 ? 'Solicitud de usuario' : 'Solicitudes de usuarios'}
             </div>
           </div>

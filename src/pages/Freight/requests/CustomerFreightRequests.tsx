@@ -27,8 +27,6 @@ export const CustomerFreightRequests = () => {
     resetAvailableFilters,
 
     refetch,
-    refetchUserFreights,
-    refetchAvailableFreights,
   } = useFreightRequests();
 
   const activeFilters =
@@ -70,7 +68,8 @@ export const CustomerFreightRequests = () => {
 
       {/* Shared Freights Section */}
       <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
+          {/* Título y descripción */}
           <div className="flex items-center gap-3">
             <div className="p-2 bg-green-50 rounded-lg">
               <Share2 className="h-5 w-5 text-green-600" />
@@ -84,23 +83,19 @@ export const CustomerFreightRequests = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={refetchAvailableFreights}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </button>
-        </div>
 
-        {/* Filtros solo para fletes disponibles */}
-        <div className="mb-6">
-          <FreightFilters
-            filters={availableFilters}
-            onFiltersChange={updateAvailableFilters}
-            onReset={resetAvailableFilters}
-            title="Filtros para fletes compartidos"
-            showSearchPlaceholder="Buscar fletes por ID o ciudad"
-          />
+          <div className="flex flex-col lg:flex-row lg:items-center gap-3 lg:min-w-0 lg:flex-1 lg:max-w-2xl lg:ml-6">
+            <div className="lg:order-1 lg:flex-1">
+              <FreightFilters
+                filters={availableFilters}
+                onFiltersChange={updateAvailableFilters}
+                onReset={resetAvailableFilters}
+                title="Filtros para fletes compartidos"
+                showSearchPlaceholder="Buscar fletes por ID o ciudad"
+                compact={true}
+              />
+            </div>
+          </div>
         </div>
 
         {availableFreights.length === 0 ? (
@@ -156,12 +151,6 @@ export const CustomerFreightRequests = () => {
               </p>
             </div>
           </div>
-          <button
-            onClick={refetchUserFreights}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
-          >
-            <RefreshCw className="h-4 w-4" />
-          </button>
         </div>
 
         {userFreights.length === 0 ? (
@@ -185,7 +174,7 @@ export const CustomerFreightRequests = () => {
                 <FreightCard
                   key={freight._id}
                   freight={freight}
-                  isOwner={freight.createdBy === freight.participants[0]?.userId}
+                  isOwner={freight.createdBy === freight.participants[0]?.user?._id}
                   showCompact
                 />
               ))}

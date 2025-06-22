@@ -221,9 +221,7 @@ export const CustomerFreightCard = ({
             <Package className="h-4 w-4 text-gray-400" />
             <div>
               <div className="text-xs text-gray-500">Volumen</div>
-              <div className="text-sm font-medium text-gray-900">
-                {freight.usedVolumeM3}m³
-              </div>
+              <div className="text-sm font-medium text-gray-900">{freight.usedVolumeM3}m³</div>
             </div>
           </div>
         </div>
@@ -250,8 +248,7 @@ export const CustomerFreightCard = ({
               ></div>
             </div>
             <div className="text-xs text-gray-500 mt-1">
-              {freight.usedVolumeM3.toFixed(1)}m³ /{' '}
-              {freight.assignedVehicle!.dimensions.totalVolumeM3.toFixed(1)}m³
+              {freight.usedVolumeM3}m³ / {freight.assignedVehicle!.dimensions.totalVolumeM3}m³
             </div>
           </div>
         )}
@@ -261,7 +258,7 @@ export const CustomerFreightCard = ({
           <div className="flex justify-between items-center pt-4 border-t border-gray-100">
             <div className="text-sm text-gray-600">
               <Clock className="h-4 w-4 inline mr-1" />
-              Espacio disponible: {freight.availableVolumeM3.toFixed(1)}m³
+              Espacio disponible: {freight.availableVolumeM3}m³
             </div>
             <button
               onClick={handleJoinClick}

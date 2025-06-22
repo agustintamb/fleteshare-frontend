@@ -29,9 +29,7 @@ const PackageInfo = ({ packageDetails, priceCalculation }: PackageInfoProps) => 
         </div>
         <div>
           <p className="text-sm text-gray-500">Volumen</p>
-          <p className="font-medium text-gray-900">
-            {priceCalculation?.volumeM3?.toFixed(3) || '0'} m³
-          </p>
+          <p className="font-medium text-gray-900">{priceCalculation?.volumeM3 || '0'} m³</p>
         </div>
       </div>
       <div>

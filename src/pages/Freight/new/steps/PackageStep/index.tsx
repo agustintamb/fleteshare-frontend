@@ -72,7 +72,7 @@ const PackageStep = ({ formData, updateFormData }: PackageStepProps) => {
         {volumeM3 > 0 && (
           <div className="bg-gray-50 p-3 rounded-md">
             <p className="text-sm text-gray-700">
-              <strong>Volumen calculado en metros cúbicos (m³):</strong> {volumeM3?.toFixed(3)}
+              <strong>Volumen calculado en metros cúbicos (m³):</strong> {volumeM3}
             </p>
           </div>
         )}

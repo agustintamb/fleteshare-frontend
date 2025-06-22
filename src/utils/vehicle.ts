@@ -65,11 +65,7 @@ export const getTransporterCapacityInfo = (
         ? 'bg-yellow-500'
         : 'bg-green-500',
     detailText: capacityInfo.canTake
-      ? `${capacityInfo.usedVolumeM3.toFixed(1)}m³ / ${capacityInfo.vehicleVolumeM3.toFixed(
-          1
-        )}m³ disponibles`
-      : `Necesitás ${capacityInfo.usedVolumeM3.toFixed(
-          1
-        )}m³ pero solo tenés ${capacityInfo.vehicleVolumeM3.toFixed(1)}m³`,
+      ? `${capacityInfo.usedVolumeM3}m³ / ${capacityInfo.vehicleVolumeM3}m³ disponibles`
+      : `Necesitás ${capacityInfo.usedVolumeM3}m³ pero solo tenés ${capacityInfo.vehicleVolumeM3}m³`,
   };
 };

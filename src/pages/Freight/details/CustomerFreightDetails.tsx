@@ -432,7 +432,7 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600">Capacidad</span>
                         <span className="text-sm font-medium">
-                          {freight.assignedVehicle.dimensions.totalVolumeM3.toFixed(1)} m³
+                          {freight.assignedVehicle.dimensions.totalVolumeM3} m³
                         </span>
                       </div>
                     </div>

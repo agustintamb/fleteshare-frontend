@@ -327,7 +327,7 @@ export const TransporterFreightDetails = ({ currentUser }: TransporterFreightDet
                       <div>
                         <span className="text-xs text-gray-500">Volumen</span>
                         <p className="text-sm font-medium">
-                          {participant.packageDimensions.volumeM3?.toFixed(2)} m³
+                          {participant.packageDimensions.volumeM3} m³
                         </p>
                       </div>
                       <div>
@@ -402,23 +402,20 @@ export const TransporterFreightDetails = ({ currentUser }: TransporterFreightDet
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-600">Requerida</span>
-                <span className="font-medium">{freight.usedVolumeM3.toFixed(2)} m³</span>
+                <span className="font-medium">{freight.usedVolumeM3} m³</span>
               </div>
               {freight.assignedVehicle && (
                 <>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Capacidad total</span>
                     <span className="font-medium">
-                      {freight.assignedVehicle.dimensions.totalVolumeM3.toFixed(2)} m³
+                      {freight.assignedVehicle.dimensions.totalVolumeM3} m³
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Disponible</span>
                     <span className="font-medium text-blue-600">
-                      {(
-                        freight.assignedVehicle.dimensions.totalVolumeM3 - freight.usedVolumeM3
-                      ).toFixed(2)}{' '}
-                      m³
+                      {freight.assignedVehicle.dimensions.totalVolumeM3 - freight.usedVolumeM3} m³
                     </span>
                   </div>
                   <div className="flex justify-between items-center">

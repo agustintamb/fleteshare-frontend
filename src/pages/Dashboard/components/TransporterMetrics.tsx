@@ -2,6 +2,7 @@ import { Truck, Calendar, TrendingUp, Clock } from 'lucide-react';
 import { IFreight } from '@/interfaces/freight';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '@/utils/constants';
+import { getStartOfDateUTC, getStartOfTodayUTC } from '@/utils/time';
 
 interface TransporterMetricsProps {
   userFreights: IFreight[];
@@ -15,11 +16,11 @@ export const TransporterMetrics = ({ userFreights, allFreights }: TransporterMet
   ).length;
 
   // Get freights this week
-  const today = new Date();
-  const nextWeek = new Date();
+  const today = getStartOfTodayUTC();
+  const nextWeek = getStartOfTodayUTC();
   nextWeek.setDate(today.getDate() + 7);
   const freightsThisWeek = userFreights.filter(freight => {
-    const freightDate = new Date(freight.scheduledDate);
+    const freightDate = getStartOfDateUTC(freight.scheduledDate);
     return (
       freightDate >= today &&
       freightDate <= nextWeek &&

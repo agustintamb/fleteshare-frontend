@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Plus, Package, Users } from 'lucide-react';
 import { ROUTES } from '@/utils/constants';
@@ -7,7 +6,7 @@ import Button from '@/components/ui/Button';
 import { CustomerDashboard } from './CustomerDashboard';
 import { TransporterDashboard } from './TransporterDashboard';
 
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   const { currentUser, isCustomer, isTransporter } = useAuth();
 
   if (!currentUser) return null;
@@ -18,9 +17,7 @@ const Dashboard: React.FC = () => {
       <div className="bg-white rounded-lg shadow-md p-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              Hola {currentUser?.firstName}!
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900">Hola {currentUser?.firstName}!</h1>
             <p className="text-gray-600 mt-1">
               {isCustomer && '¿Necesitas enviar algo hoy?'}
               {isTransporter && '¿Listo para aceptar nuevos fletes?'}

@@ -26,7 +26,7 @@ export const useNewFreightFlow = () => {
       length: 0,
       description: '',
     },
-    scheduledDate: new Date().toISOString().split('T')[0],
+    scheduledDate: '',
   });
 
   const updateFormData = useCallback((updates: Partial<FreightFormData>) => {
@@ -67,7 +67,7 @@ export const useNewFreightFlow = () => {
       dispatch(createFreight(freightRequest))
         .unwrap()
         .then(response => {
-          if (response.result) navigate(`/freight/${response.result._id}`);
+          if (response.result) navigate(`/fletes/${response.result._id}`);
         });
     } catch (error) {
       console.error('Error creating freight request:', error);
@@ -87,7 +87,7 @@ export const useNewFreightFlow = () => {
           length: 0,
           description: '',
         },
-        scheduledDate: new Date().toISOString().split('T')[0],
+        scheduledDate: '',
       });
     };
   }, [currentUser]);

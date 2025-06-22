@@ -10,6 +10,7 @@ import Home from '@/pages/Home';
 import Dashboard from '@/pages/Dashboard';
 import NewFreightRequest from '@/pages/Freight/new';
 import FreightRequests from '@/pages/Freight/requests';
+import { FreightDetails } from '@/pages/Freight/details';
 import Profile from '@/pages/Profile';
 import Notifications from '@/pages/Notifications';
 import NotFound from '@/pages/NotFound';
@@ -63,7 +64,7 @@ export const routeConfig: RouteObject[] = [
         children: [
           { index: true, element: withSuspense(FreightRequests) },
           { path: 'nuevo', element: withSuspense(NewFreightRequest) },
-          //{ path: ':id', element: withSuspense(FreightDetails) },
+          { path: ':id', element: withSuspense(FreightDetails) },
         ],
       },
     ],

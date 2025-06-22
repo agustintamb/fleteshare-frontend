@@ -56,10 +56,7 @@ const NewFreightRequest = () => {
     }
   };
 
-  // No renderizar si el usuario es transportista
-  if (currentUser?.role === 'transporter') {
-    return null;
-  }
+  if (currentUser?.role === 'transporter') return null;
 
   const renderCurrentStep = () => {
     const stepProps = {

@@ -16,8 +16,18 @@ export interface IPackageDimensions {
   volumeM3?: number; // calculado automáticamente por el backend
 }
 
+export interface IParticipant {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  username: string;
+  avatar?: string;
+}
+
 export interface IFreightParticipant {
-  userId: string;
+  user: IParticipant;
   pickupAddress: IAddress;
   deliveryAddress: IAddress;
   packageDimensions: IPackageDimensions;
@@ -42,6 +52,7 @@ export interface IRoutePoint {
   participantIndex: number;
   address: IAddress;
   estimatedTime?: Date;
+  visited?: boolean;
 }
 
 export interface ISuggestedRoute {
@@ -65,7 +76,7 @@ export interface IFreight {
   completedAt?: Date;
   cancelledAt?: Date;
   cancellationReason?: string;
-  suggestedRoute?: ISuggestedRoute;
+  suggestedRoute: ISuggestedRoute;
   createdAt: Date;
   updatedAt: Date;
 }

@@ -23,27 +23,19 @@ export const getTimeAgo = (dateString: string) => {
 };
 
 /**
- * Formatea una fecha para mostrar en zona horaria local
+ * Formatea una fecha para mostrar el día de la semana completo, día, mes y año
  */
-export const formatDateLocal = (date: Date | string): string => {
-  return new Intl.DateTimeFormat('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
+export const formatDateWithWeekday = (
+  date: Date | string,
+  display: 'short' | 'long' = 'long'
+): string => {
+  const dateObj = typeof date === 'string' ? new Date(`${date}T12:00:00`) : date;
+  return dateObj.toLocaleDateString('es-AR', {
+    weekday: display,
+    day: 'numeric',
+    month: display,
     year: 'numeric',
-  }).format(new Date(date));
-};
-
-/**
- * Formatea una fecha y hora para mostrar en zona horaria local
- */
-export const formatDateTimeLocal = (date: Date | string): string => {
-  return new Intl.DateTimeFormat('es-AR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(date));
+  });
 };
 
 /**
@@ -58,4 +50,51 @@ export const formatDateUTC = (date: Date | string): string => {
   const day = String(dateObj.getUTCDate()).padStart(2, '0');
 
   return `${day}/${month}/${year}`;
+};
+
+/**
+ * Formatea una fecha y hora sin conversión de zona horaria
+ * Útil para mostrar fechas que se guardan en UTC pero deben mostrarse como fecha y hora local
+ */
+export const formatDateTimeUTC = (date: Date | string): string => {
+  const dateObj = new Date(date);
+  // Extraer año, mes, día, hora y minutos directamente de la fecha UTC
+  const year = dateObj.getUTCFullYear();
+  const month = String(dateObj.getUTCMonth() + 1).padStart(2, '0');
+  const day = String(dateObj.getUTCDate()).padStart(2, '0');
+  const hours = String(dateObj.getUTCHours()).padStart(2, '0');
+  const minutes = String(dateObj.getUTCMinutes()).padStart(2, '0');
+
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
+/**
+ * Obtiene el inicio del día actual en UTC (00:00:00.000Z)
+ * Útil para filtros que incluyan "desde hoy"
+ */
+export const getStartOfTodayUTC = (): Date => {
+  const now = new Date();
+  return new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 0, 0, 0, 0));
+};
+
+/**
+ * Obtiene el final del día actual en UTC (23:59:59.999Z)
+ * Útil para filtros que incluyan "hasta hoy"
+ */
+export const getEndOfTodayUTC = (): Date => {
+  const now = new Date();
+  return new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), 23, 59, 59, 999)
+  );
+};
+
+/**
+ * Obtiene el inicio de una fecha específica en UTC (00:00:00.000Z)
+ * @param date - Fecha a convertir (string ISO o Date object)
+ */
+export const getStartOfDateUTC = (date: string | Date): Date => {
+  const dateObj = new Date(date);
+  return new Date(
+    Date.UTC(dateObj.getUTCFullYear(), dateObj.getUTCMonth(), dateObj.getUTCDate(), 0, 0, 0, 0)
+  );
 };

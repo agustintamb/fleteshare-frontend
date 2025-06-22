@@ -4,6 +4,7 @@ import { FreightCard } from '@/components/freight/FreightCard';
 import { useDashboard } from './useDashboard';
 import Button from '@/components/ui/Button';
 import { ROUTES } from '@/utils/constants';
+import { getStartOfDateUTC, getStartOfTodayUTC } from '@/utils/time';
 import { TransporterMetrics } from './components/TransporterMetrics';
 import { UrgentOpportunitiesAlert } from './components/UrgentOpportunitiesAlert';
 import { PerformanceSummary } from './components/PerformanceSummary';
@@ -21,9 +22,9 @@ export const TransporterDashboard = () => {
   }
 
   // Get upcoming freights for priority display
-  const today = new Date();
+  const today = getStartOfTodayUTC();
   const upcomingFreights = userFreights.filter(freight => {
-    const freightDate = new Date(freight.scheduledDate);
+    const freightDate = getStartOfDateUTC(freight.scheduledDate);
     return freightDate >= today && ['taken', 'started'].includes(freight.status);
   });
 
@@ -82,12 +83,7 @@ export const TransporterDashboard = () => {
           <div className="space-y-4">
             {/* Show active/upcoming freights first */}
             {upcomingFreights.slice(0, 2).map(freight => (
-              <FreightCard
-                key={freight._id}
-                freight={freight}
-                showCompact={true}
-                showPriorityBadge={true}
-              />
+              <FreightCard key={freight._id} freight={freight} showCompact showPriorityBadge />
             ))}
 
             {/* Show other recent freights */}
@@ -95,7 +91,7 @@ export const TransporterDashboard = () => {
               .filter(freight => !upcomingFreights.includes(freight))
               .slice(0, 2)
               .map(freight => (
-                <FreightCard key={freight._id} freight={freight} showCompact={true} />
+                <FreightCard key={freight._id} freight={freight} showCompact />
               ))}
 
             {userFreights.length > 4 && (

@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { FreightFormData, StepValidation } from '../../types';
+import { formatDateWithWeekday, getStartOfTodayUTC } from '@/utils/time';
 
 interface UseScheduleStepProps {
   formData: FreightFormData;
@@ -19,19 +20,26 @@ export const useScheduleStep = ({ formData, updateFormData }: UseScheduleStepPro
   const validation = useMemo((): StepValidation => {
     const errors: string[] = [];
 
-    if (!formData.scheduledDate) errors.push('La fecha programada es obligatoria');
+    if (!formData.scheduledDate)
+      errors.push('Debes seleccionar una fecha válida para la programación');
 
-    if (formData.scheduledDate) {
-      const selectedDate = new Date(formData.scheduledDate);
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
+    // Crear fecha seleccionada con hora específica para evitar problemas de zona horaria
+    const selectedDate = new Date(`${formData.scheduledDate}T12:00:00`);
 
-      // Verificar que no sea más de 30 días en el futuro
-      const maxDate = new Date();
-      maxDate.setDate(maxDate.getDate() + 30);
-      if (selectedDate > maxDate) errors.push('La fecha no puede ser más de 30 días en el futuro');
-    }
+    // Fecha de hoy a las 00:00:00 para comparación
+    const today = getStartOfTodayUTC();
+
+    // Fecha máxima (30 días desde hoy)
+    const maxAllowedDate = new Date();
+    maxAllowedDate.setDate(maxAllowedDate.getDate() + 30);
+    maxAllowedDate.setHours(23, 59, 59, 999);
+
+    // Verificar que no sea anterior a hoy
+    if (selectedDate < today) errors.push('No puedes seleccionar una fecha anterior al día de hoy');
+
+    // Verificar que no sea más de 30 días en el futuro
+    if (selectedDate > maxAllowedDate)
+      errors.push('La fecha no puede ser más de 30 días en el futuro');
 
     return {
       isValid: errors.length === 0,
@@ -40,9 +48,8 @@ export const useScheduleStep = ({ formData, updateFormData }: UseScheduleStepPro
   }, [formData.scheduledDate]);
 
   const minDate = useMemo(() => {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 2);
-    return tomorrow.toISOString().split('T')[0];
+    const today = getStartOfTodayUTC();
+    return today.toISOString().split('T')[0];
   }, []);
 
   const maxDate = useMemo(() => {
@@ -53,13 +60,7 @@ export const useScheduleStep = ({ formData, updateFormData }: UseScheduleStepPro
 
   const formattedDate = useMemo(() => {
     if (!formData.scheduledDate) return '';
-    const date = new Date(`${formData.scheduledDate}T12:00:00`);
-    return date.toLocaleDateString('es-AR', {
-      weekday: 'long',
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    });
+    return formatDateWithWeekday(formData.scheduledDate);
   }, [formData.scheduledDate]);
 
   return {

@@ -1,7 +1,8 @@
 import { Package, TrendingUp, Calendar } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { IFreight } from '@/interfaces/freight';
 import { ROUTES } from '@/utils/constants';
-import { Link } from 'react-router-dom';
+import { getStartOfDateUTC, getStartOfTodayUTC } from '@/utils/time';
 
 interface CustomerMetricsProps {
   userFreights: IFreight[];
@@ -15,9 +16,9 @@ export const CustomerMetrics = ({ userFreights, allFreights }: CustomerMetricsPr
   ).length;
 
   // Get upcoming freights
-  const today = new Date();
+  const today = getStartOfTodayUTC();
   const upcomingFreights = allFreights?.filter(freight => {
-    const freightDate = new Date(freight.scheduledDate);
+    const freightDate = getStartOfDateUTC(freight.scheduledDate);
     return freightDate >= today && ['requested', 'taken'].includes(freight.status);
   }).length;
 
@@ -58,7 +59,7 @@ export const CustomerMetrics = ({ userFreights, allFreights }: CustomerMetricsPr
           </div>
           <div>
             <div className="text-2xl font-bold text-blue-900">{upcomingFreights}</div>
-            <div className="text-sm text-blue-700">
+            <div className="text-xs text-blue-700">
               {upcomingFreights === 1 ? 'Solicitud de usuario' : 'Solicitudes de usuarios'}
             </div>
           </div>

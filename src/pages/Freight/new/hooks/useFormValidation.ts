@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { FormStep, FreightFormData, StepValidation } from '../types';
+import { getStartOfTodayUTC } from '@/utils/time';
 
 interface UseFormValidationProps {
   currentStep: FormStep;
@@ -67,26 +68,30 @@ export const useFormValidation = ({ currentStep, formData }: UseFormValidationPr
     const errors: string[] = [];
 
     if (!formData.scheduledDate) {
-      errors.push('La fecha programada es obligatoria');
+      errors.push('Debes seleccionar una fecha válida para la programación');
+      return {
+        isValid: false,
+        errors,
+      };
     }
 
-    if (formData.scheduledDate) {
-      const selectedDate = new Date(formData.scheduledDate);
-      const tomorrow = new Date();
-      tomorrow.setDate(tomorrow.getDate() + 1);
-      tomorrow.setHours(0, 0, 0, 0);
+    // Crear fecha seleccionada con hora específica para evitar problemas de zona horaria
+    const selectedDate = new Date(`${formData.scheduledDate}T12:00:00`);
 
-      if (selectedDate < tomorrow) {
-        errors.push('La fecha debe ser al menos 24 horas en el futuro');
-      }
+    // Fecha de hoy a las 00:00:00 para comparación
+    const today = getStartOfTodayUTC();
 
-      // Verificar que no sea más de 30 días en el futuro
-      const maxDate = new Date();
-      maxDate.setDate(maxDate.getDate() + 30);
-      if (selectedDate > maxDate) {
-        errors.push('La fecha no puede ser más de 30 días en el futuro');
-      }
-    }
+    // Fecha máxima (30 días desde hoy)
+    const maxAllowedDate = new Date();
+    maxAllowedDate.setDate(maxAllowedDate.getDate() + 30);
+    maxAllowedDate.setHours(23, 59, 59, 999);
+
+    // Verificar que no sea anterior a hoy
+    if (selectedDate < today) errors.push('No puedes seleccionar una fecha anterior al día de hoy');
+
+    // Verificar que no sea más de 30 días en el futuro
+    if (selectedDate > maxAllowedDate)
+      errors.push('La fecha no puede ser más de 30 días en el futuro');
 
     return {
       isValid: errors.length === 0,

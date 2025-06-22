@@ -13,7 +13,7 @@ import {
   Navigation,
   Phone,
 } from 'lucide-react';
-import { IFreight } from '@/interfaces/freight';
+import { useFreightDetails } from './useFreightDetail';
 import { IUser } from '@/interfaces/user';
 import { formatDateWithWeekday, formatDateTimeUTC } from '@/utils/time';
 import { statusConfig } from '@/utils/status';
@@ -21,11 +21,19 @@ import { ROUTES } from '@/utils/constants';
 import Button from '@/components/ui/Button';
 
 interface CustomerFreightDetailsProps {
-  freight: IFreight;
   currentUser: IUser;
 }
 
-export const CustomerFreightDetails = ({ freight, currentUser }: CustomerFreightDetailsProps) => {
+export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsProps) => {
+  const { currentFreight: freight, isLoading } = useFreightDetails();
+
+  if (!freight || isLoading)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-gray-500">Cargando...</div>
+      </div>
+    );
+
   // Verificar si el usuario actual es participante
   const isParticipant = freight.participants.some(p => p.user._id === currentUser._id);
   const isCreator = freight.createdBy === currentUser._id;

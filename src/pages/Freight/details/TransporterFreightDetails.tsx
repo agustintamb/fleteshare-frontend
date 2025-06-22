@@ -16,26 +16,31 @@ import {
   Mail,
   UserCircle,
 } from 'lucide-react';
+import { useFreightDetails } from './useFreightDetail';
 import { ROUTES } from '@/utils/constants';
 import { formatDateWithWeekday, formatDateTimeUTC } from '@/utils/time';
 import { statusConfig } from '@/utils/status';
 import { formatARS } from '@/utils/currency';
-import { IFreight, IParticipant } from '@/interfaces/freight';
+import { IParticipant } from '@/interfaces/freight';
 import { IUser } from '@/interfaces/user';
 import Button from '@/components/ui/Button';
 import Modal from '@/components/ui/Modal';
 
 interface TransporterFreightDetailsProps {
-  freight: IFreight;
   currentUser: IUser;
 }
 
-export const TransporterFreightDetails = ({
-  freight,
-  currentUser,
-}: TransporterFreightDetailsProps) => {
+export const TransporterFreightDetails = ({ currentUser }: TransporterFreightDetailsProps) => {
+  const { currentFreight: freight, isLoading } = useFreightDetails();
   const [selectedParticipant, setSelectedParticipant] = useState<IParticipant | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  if (isLoading || !freight)
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="text-gray-500">Cargando...</div>
+      </div>
+    );
 
   const statusInfo = statusConfig[freight.status];
 

@@ -6,7 +6,7 @@ import {
   CreateFreightRequest,
   JoinFreightParams,
   CalculatePriceRequest,
-  ValidateJoinFreightParams,
+  //ValidateJoinFreightParams,
   GetUserFreightsQuery,
   GetFreightsQuery,
 } from '@/interfaces/freight';
@@ -43,26 +43,29 @@ export const joinFreight = createAsyncThunk(
   async ({ freightId, joinData }: JoinFreightParams, { rejectWithValue }) => {
     try {
       const { data } = await freightsService.joinFreight(freightId, joinData);
+      if (data) toast.success('Listo! Te uniste al flete');
       return data;
     } catch (error) {
+      toast.error(`Error al unirte al flete: ${error}`);
+      console.log('Error al unirte al flete:', error);
       if (isAxiosError(error)) return rejectWithValue(error);
       return rejectWithValue(error);
     }
   }
 );
 
-export const validateJoinFreight = createAsyncThunk(
-  'freights/validateJoin',
-  async ({ freightId, validationData }: ValidateJoinFreightParams, { rejectWithValue }) => {
-    try {
-      const { data } = await freightsService.validateJoinFreight(freightId, validationData);
-      return data;
-    } catch (error) {
-      if (isAxiosError(error)) return rejectWithValue(error);
-      return rejectWithValue(error);
-    }
-  }
-);
+//export const validateJoinFreight = createAsyncThunk(
+//  'freights/validateJoin',
+//  async ({ freightId, validationData }: ValidateJoinFreightParams, { rejectWithValue }) => {
+//    try {
+//      const { data } = await freightsService.validateJoinFreight(freightId, validationData);
+//      return data;
+//    } catch (error) {
+//      if (isAxiosError(error)) return rejectWithValue(error);
+//      return rejectWithValue(error);
+//    }
+//  }
+//);
 
 export const getUserFreights = createAsyncThunk(
   'freights/getUserFreights',

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import ServiceBase from '@/service/ServiceBase';
 import { IApiResponse } from '@/interfaces/api';
-import { IAddress, ICoordinates } from '@/interfaces/address';
+import { ICoordinates } from '@/interfaces/address';
 import {
   CreateFreightRequest,
   JoinFreightRequest,
@@ -30,15 +30,15 @@ class FreightsService extends ServiceBase {
   ): Promise<AxiosResponse<FreightDetailResponse>> =>
     this.client.post(`freights/${freightId}/join`, joinData);
 
-  validateJoinFreight = (
-    freightId: string,
-    data: {
-      pickupAddress: IAddress;
-      deliveryAddress: IAddress;
-      packageDimensions: Omit<IPackageDimensions, 'volumeM3'>;
-    }
-  ): Promise<AxiosResponse<IApiResponse>> =>
-    this.client.post(`freights/${freightId}/validate-join`, data);
+  //validateJoinFreight = (
+  //  freightId: string,
+  //  data: {
+  //    pickupAddress: IAddress;
+  //    deliveryAddress: IAddress;
+  //    packageDimensions: Omit<IPackageDimensions, 'volumeM3'>;
+  //  }
+  //): Promise<AxiosResponse<IApiResponse>> =>
+  //  this.client.post(`freights/${freightId}/validate-join`, data);
 
   getUserFreights = (query?: GetUserFreightsQuery): Promise<AxiosResponse<FreightListResponse>> => {
     const params = new URLSearchParams();

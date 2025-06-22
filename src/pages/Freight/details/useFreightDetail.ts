@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '@/app/store';
 import { selectorFreigths } from '@/features/freights/slice';
 import {
   getFreightById,
-  takeFreight,
-  joinFreight,
-  updateFreightStatus,
+  //takeFreight,
+  //joinFreight,
+  //updateFreightStatus,
 } from '@/features/freights/asyncActions';
 
 export const useFreightDetails = () => {
@@ -15,6 +15,11 @@ export const useFreightDetails = () => {
   const { currentFreight, isLoading } = useSelector(selectorFreigths);
 
   const { id } = useParams<{ id: string }>();
+
+  const fetchCurrentFreight = useCallback(() => {
+    if (!id) return;
+    dispatch(getFreightById(id));
+  }, [dispatch, id]);
 
   const handleTakeFreight = () => {
     console.log('Taking freight:', id);
@@ -36,6 +41,7 @@ export const useFreightDetails = () => {
     currentFreight,
     freightId: id,
     isLoading,
+    refetch: () => fetchCurrentFreight(),
     handleTakeFreight,
     handleJoinFreight,
     handleCancelFreight,

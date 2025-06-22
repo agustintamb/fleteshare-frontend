@@ -6,7 +6,7 @@ import { IFreight, IFreightsWithPagination, PriceCalculation } from '@/interface
 import {
   calculatePrice,
   createFreight,
-  //joinFreight,
+  joinFreight,
   //validateJoinFreight,
   getUserFreights,
   getFreightById,
@@ -16,17 +16,21 @@ import {
 } from './asyncActions';
 
 interface initialStateProps extends IBaseSlice {
-  isLoadingUserFreights?: boolean;
-  priceCalculation?: PriceCalculation | null;
-  allFreights?: IFreightsWithPagination | null;
-  userFreights?: IFreightsWithPagination | null;
-  currentFreight?: IFreight | null;
+  isLoadingUserFreights: boolean;
+  isLoadingPriceCalculation: boolean;
+  isLoadingJoin: boolean;
+  priceCalculation: PriceCalculation | null;
+  allFreights: IFreightsWithPagination | null;
+  userFreights: IFreightsWithPagination | null;
+  currentFreight: IFreight | null;
 }
 
 const initialState: initialStateProps = {
   error: null,
   isLoading: false,
   isLoadingUserFreights: false,
+  isLoadingPriceCalculation: false,
+  isLoadingJoin: false,
   priceCalculation: null,
   allFreights: null,
   userFreights: null,
@@ -44,15 +48,15 @@ export const freightsSlice = createSlice({
   extraReducers: builder => {
     // calculatePrice
     builder.addCase(calculatePrice.pending, state => {
-      state.isLoading = true;
+      state.isLoadingPriceCalculation = true;
       state.error = null;
     });
     builder.addCase(calculatePrice.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.isLoadingPriceCalculation = false;
       state.priceCalculation = action.payload.result;
     });
     builder.addCase(calculatePrice.rejected, (state, action) => {
-      state.isLoading = false;
+      state.isLoadingPriceCalculation = false;
       state.error = errorMessage(action.payload);
     });
 
@@ -63,7 +67,6 @@ export const freightsSlice = createSlice({
     });
     builder.addCase(createFreight.fulfilled, (state, action) => {
       state.isLoading = false;
-      if (state.userFreights) state.userFreights.freights.push(action.payload.result);
       state.currentFreight = action.payload.result;
       state.priceCalculation = null; // Clear price calculation after creating freight
       state.error = null; // Clear any previous error
@@ -115,21 +118,18 @@ export const freightsSlice = createSlice({
       state.error = errorMessage(action.payload);
     });
 
-    //// joinFreight
-    //builder.addCase(joinFreight.pending, state => {
-    //  state.isLoading = true;
-    //  state.error = null;
-    //});
-    //builder.addCase(joinFreight.fulfilled, (state, action) => {
-    //  state.isLoading = false;
-    //  if (state.userFreights) {
-    //    state.userFreights.push(action.payload);
-    //  }
-    //});
-    //builder.addCase(joinFreight.rejected, (state, action) => {
-    //  state.isLoading = false;
-    //  state.error = errorMessage(action.payload);
-    //});
+    // joinFreight
+    builder.addCase(joinFreight.pending, state => {
+      state.isLoadingJoin = true;
+      state.error = null;
+    });
+    builder.addCase(joinFreight.fulfilled, state => {
+      state.isLoadingJoin = false;
+    });
+    builder.addCase(joinFreight.rejected, (state, action) => {
+      state.isLoadingJoin = false;
+      state.error = errorMessage(action.payload);
+    });
 
     //// validateJoinFreight
     //builder.addCase(validateJoinFreight.pending, state => {

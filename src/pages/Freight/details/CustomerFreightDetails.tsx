@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/app/store';
 import { Link } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -19,13 +22,17 @@ import { formatDateWithWeekday, formatDateTimeUTC } from '@/utils/time';
 import { statusConfig } from '@/utils/status';
 import { ROUTES } from '@/utils/constants';
 import Button from '@/components/ui/Button';
+import { JoinFreightModal } from './join/JoinFreightModal';
+import { cleanPriceCalculation } from '@/features/freights/slice';
 
 interface CustomerFreightDetailsProps {
   currentUser: IUser;
 }
 
 export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsProps) => {
-  const { currentFreight: freight, isLoading } = useFreightDetails();
+  const dispatch: AppDispatch = useDispatch();
+  const { currentFreight: freight, isLoading, refetch } = useFreightDetails();
+  const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   if (!freight || isLoading)
     return (
@@ -106,6 +113,16 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
 
   const fullRoute = createFullRoute();
 
+  const handleJoinSuccess = () => {
+    setIsJoinModalOpen(false);
+    refetch();
+  };
+
+  const handleOnCloseJoin = () => {
+    setIsJoinModalOpen(false);
+    dispatch(cleanPriceCalculation());
+  };
+
   return (
     <div className="space-y-6 pb-16 md:pb-0">
       {/* Header con información principal */}
@@ -162,7 +179,7 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
           <div className="flex flex-wrap gap-3">
             {/* Botón de unirse (para customers que no son participantes) */}
             {canJoin && (
-              <Button variant="primary" size="lg">
+              <Button variant="primary" size="lg" onClick={() => setIsJoinModalOpen(true)}>
                 Unirse al flete
               </Button>
             )}
@@ -208,15 +225,6 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
                     <div className="flex items-center gap-2 text-sm text-green-700 mb-2">
                       <MapPin size={16} />
                       <span className="font-medium">Retiro</span>
-                      {/* Mensaje informativo para usuarios que pueden unirse */}
-                      {!isParticipant && (
-                        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                          <p className="text-sm text-blue-700">
-                            <strong>Vista previa:</strong> Esta es la ruta aproximada del flete. Una
-                            vez que te unas, podrás ver los detalles completos de tu recorrido.
-                          </p>
-                        </div>
-                      )}
                     </div>
                     <p className="text-sm text-gray-900 font-medium">
                       {currentParticipant.pickupAddress.formattedAddress ||
@@ -268,6 +276,15 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
             </div>
           )}
 
+          {/* Mensaje informativo para usuarios que pueden unirse */}
+          {!isParticipant && canJoin && (
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+              <p className="text-sm text-blue-700">
+                <strong>Vista previa:</strong> Esta es la ruta aproximada del flete.
+              </p>
+            </div>
+          )}
+
           {/* Ruta del flete - Para participantes y usuarios que pueden unirse */}
           {freight.suggestedRoute && fullRoute.length > 0 && (isParticipant || canJoin) && (
             <div className="bg-white rounded-lg shadow-md p-6">
@@ -313,7 +330,7 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
                           {point.type === 'pickup' ? 'Retiro' : 'Entrega'}
                         </span>
                         <span className="text-xs text-gray-700 font-medium">
-                          {point.isCurrentUser ? '' : point.participantName}
+                          {point.isCurrentUser ? 'Tu dirección' : point.participantName}
                         </span>
                         {point.visited && (
                           <span className="text-xs text-green-600 font-medium">Visitado</span>
@@ -432,7 +449,7 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
                       <div className="flex justify-between">
                         <span className="text-sm text-gray-600">Capacidad</span>
                         <span className="text-sm font-medium">
-                          {freight.assignedVehicle.dimensions.totalVolumeM3} m³
+                          {freight.assignedVehicle.dimensions.totalVolumeM3.toFixed(1)} m³
                         </span>
                       </div>
                     </div>
@@ -484,6 +501,12 @@ export const CustomerFreightDetails = ({ currentUser }: CustomerFreightDetailsPr
           </div>
         </div>
       </div>
+      <JoinFreightModal
+        open={isJoinModalOpen}
+        freight={freight}
+        onClose={handleOnCloseJoin}
+        onJoinSuccess={handleJoinSuccess}
+      />
     </div>
   );
 };

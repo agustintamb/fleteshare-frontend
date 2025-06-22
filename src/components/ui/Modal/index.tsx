@@ -32,6 +32,7 @@ const Modal = ({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
+          style={{ marginTop: 0 }}
           className="fixed inset-0 z-50 flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-black bg-opacity-60 backdrop-blur-sm"
         >
           {/* Modal */}
@@ -41,11 +42,11 @@ const Modal = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.2 }}
-            className={`relative w-full ${getSizeClass()} max-h-[90vh] overflow-y-auto bg-white rounded-xl shadow-2xl`}
+            className={`relative w-full ${getSizeClass()} max-h-[90vh] bg-white rounded-xl shadow-2xl flex flex-col`}
           >
             {/* Header */}
             {showHeader && (title || onClose) && (
-              <div className="flex items-center justify-between p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between p-6 border-b border-gray-200 flex-shrink-0">
                 {title && (
                   <h2 className="text-xl font-semibold text-gray-900">
                     {typeof title === 'string' ? title : title}
@@ -63,11 +64,15 @@ const Modal = ({
               </div>
             )}
 
-            {/* Content */}
-            <div className={showHeader ? 'p-6' : 'p-6'}>{children}</div>
+            {/* Content - Scrollable */}
+            <div className="flex-1 overflow-y-auto p-6">{children}</div>
 
             {/* Actions */}
-            {actions && <div className="flex justify-end gap-2 p-6 pt-0">{actions}</div>}
+            {actions && (
+              <div className="flex justify-end gap-2 p-6 pt-0 border-t border-gray-200 flex-shrink-0">
+                {actions}
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}

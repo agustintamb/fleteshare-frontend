@@ -111,12 +111,6 @@ export const TransporterFreightRequests = () => {
                   Limpiar filtros
                 </button>
               )}
-              <button
-                onClick={refetchAvailableFreights}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              >
-                Actualizar solicitudes
-              </button>
             </div>
           </div>
         ) : (

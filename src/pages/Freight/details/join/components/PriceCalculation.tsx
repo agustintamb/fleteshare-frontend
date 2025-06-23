@@ -8,7 +8,6 @@ interface PriceCalculationProps {
 
 const PriceCalculation = ({ priceCalculation, isCalculating }: PriceCalculationProps) => {
   if (!isCalculating && !priceCalculation) return null;
-
   return (
     <div className="mt-6 p-4 bg-gray-50 rounded-md">
       <h4 className="font-medium text-gray-900 mb-3">Estimación de Tu Precio</h4>
@@ -21,9 +20,7 @@ const PriceCalculation = ({ priceCalculation, isCalculating }: PriceCalculationP
       ) : priceCalculation ? (
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">
-              Por volumen ({priceCalculation.volumeM3?.toFixed(3)} m³):
-            </span>
+            <span className="text-gray-600">Por volumen ({priceCalculation.volumeM3} m³):</span>
             <span className="font-medium">{formatARS(priceCalculation.volumePrice)}</span>
           </div>
           <div className="flex justify-between text-sm">

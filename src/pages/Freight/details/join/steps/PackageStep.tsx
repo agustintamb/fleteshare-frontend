@@ -17,6 +17,7 @@ const PackageStep = ({ formData, updateFormData, freight }: PackageStepProps) =>
     volumeM3,
     availableSpace,
     vehicleAssigned,
+    excededSpace,
   } = usePackageStep({ formData, updateFormData, freight });
 
   return (
@@ -29,16 +30,23 @@ const PackageStep = ({ formData, updateFormData, freight }: PackageStepProps) =>
       <h3 className="text-lg font-semibold text-gray-900 mb-3">Detalles del Paquete</h3>
 
       {/* Info del espacio disponible */}
-      {freight.assignedVehicle && (
-        <div className="bg-green-50 p-4 rounded-lg mb-4">
+      {vehicleAssigned && (
+        <div className={`p-4 rounded-lg mb-4 ${excededSpace ? 'bg-red-50' : 'bg-green-50'}`}>
           <div className="flex items-center gap-2 mb-2">
-            <Package size={18} className="text-green-600" />
-            <h4 className="font-medium text-green-900">Espacio Disponible en el Flete</h4>
+            <Package size={18} className={excededSpace ? 'text-red-600' : 'text-green-600'} />
+            <h4 className={`font-medium ${excededSpace ? 'text-red-900' : 'text-green-900'}`}>
+              {excededSpace ? 'Espacio Insuficiente' : 'Espacio Disponible en el Flete'}
+            </h4>
           </div>
-          <p className="text-sm text-green-700">
+          <p className={`text-sm ${excededSpace ? 'text-red-700' : 'text-green-700'}`}>
             <strong>{availableSpace} m³</strong> disponibles de{' '}
             <strong>{freight.usedVolumeM3 + availableSpace} m³</strong> totales
           </p>
+          {excededSpace && (
+            <p className="text-sm text-red-700 mt-2">
+              ⚠️ Tu paquete ({volumeM3} m³) excede el espacio disponible
+            </p>
+          )}
         </div>
       )}
 
@@ -90,11 +98,6 @@ const PackageStep = ({ formData, updateFormData, freight }: PackageStepProps) =>
             <p className="text-sm text-gray-700">
               <strong>Volumen calculado:</strong> {volumeM3} m³
             </p>
-            {vehicleAssigned && volumeM3 > availableSpace && (
-              <p className="text-sm text-red-600 mt-1">
-                ⚠️ Excedés el espacio disponible del vehiculo asignado a este flete.
-              </p>
-            )}
           </div>
         )}
 

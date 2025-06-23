@@ -26,6 +26,21 @@ export interface IParticipant {
   avatar?: string;
 }
 
+export interface ITransporterData {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  vehicle: {
+    plate: string;
+    dimensions: {
+      length: number;
+      width: number;
+      height: number;
+    };
+  };
+}
+
 export interface IFreightParticipant {
   user: IParticipant;
   pickupAddress: IAddress;
@@ -51,21 +66,51 @@ export interface IAssignedVehicle {
 export interface IRoutePoint {
   participantIndex: number;
   address: IAddress;
+  visited: boolean;
   estimatedTime?: Date;
-  visited?: boolean;
+  _id?: string;
 }
 
+export interface RouteStop {
+  participantIndex: number;
+  type: 'pickup' | 'delivery';
+  address: {
+    street: string;
+    number: string;
+    city: string;
+    state: string;
+    country: string;
+    postalCode: string;
+    latitude: number;
+    longitude: number;
+    formattedAddress: string;
+    neighborhood: string;
+  };
+  visited: boolean;
+  estimatedArrivalTime?: Date;
+  distanceFromPrevious?: number;
+  _id?: string;
+}
 export interface ISuggestedRoute {
   pickupSequence: IRoutePoint[];
   deliverySequence: IRoutePoint[];
+  optimizedRoute?: RouteStop[];
   totalDistance: number;
+  totalStops?: number;
+  estimatedDuration?: number; // En minutos
+}
+
+export interface IRouteProgress {
+  completed: number;
+  total: number;
+  percentage: number;
 }
 
 export interface IFreight {
   _id: string;
   createdBy: string;
   participants: IFreightParticipant[];
-  transporterId?: string;
+  transporterId?: ITransporterData;
   status: FreightStatus;
   assignedVehicle?: IAssignedVehicle;
   totalPrice: number;

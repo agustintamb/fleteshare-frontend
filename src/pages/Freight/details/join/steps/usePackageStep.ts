@@ -40,6 +40,8 @@ export const usePackageStep = ({ formData, updateFormData, freight }: UsePackage
     return freight.availableVolumeM3 || 0;
   }, [freight.availableVolumeM3]);
 
+  const excededSpace = vehicleAssigned && volumeM3 > availableSpace;
+
   const validation = useMemo((): StepValidation => {
     const errors: string[] = [];
     const { packageDetails } = formData;
@@ -127,5 +129,6 @@ export const usePackageStep = ({ formData, updateFormData, freight }: UsePackage
     volumeM3,
     availableSpace,
     vehicleAssigned,
+    excededSpace,
   };
 };

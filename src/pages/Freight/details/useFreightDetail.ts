@@ -2,17 +2,22 @@ import { useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { AppDispatch } from '@/app/store';
+import { useAuth } from '@/hooks/useAuth';
 import { selectorFreigths } from '@/features/freights/slice';
 import {
   getFreightById,
-  //takeFreight,
-  //joinFreight,
-  //updateFreightStatus,
+  takeFreight,
+  startFreight,
+  cancelFreight,
+  leaveFreight,
+  finishFreight,
+  markStopAsVisited,
 } from '@/features/freights/asyncActions';
 
 export const useFreightDetails = () => {
   const dispatch = useDispatch<AppDispatch>();
-  const { currentFreight, isLoading } = useSelector(selectorFreigths);
+  const { isCustomer, isTransporter } = useAuth();
+  const { currentFreight, isLoading, isActionLoading } = useSelector(selectorFreigths);
 
   const { id } = useParams<{ id: string }>();
 
@@ -21,29 +26,61 @@ export const useFreightDetails = () => {
     dispatch(getFreightById(id));
   }, [dispatch, id]);
 
-  const handleTakeFreight = () => {
-    console.log('Taking freight:', id);
-  };
+  const handleTakeFreight = useCallback(() => {
+    if (isCustomer || !id) return;
+    dispatch(takeFreight(id)).then(() => fetchCurrentFreight());
+  }, [dispatch, id, isCustomer, fetchCurrentFreight]);
 
-  const handleJoinFreight = () => {
-    console.log('Joining freight:', id);
-  };
+  const handleStartFreight = useCallback(() => {
+    if (isCustomer || !id) return;
+    dispatch(startFreight(id)).then(() => fetchCurrentFreight());
+  }, [dispatch, id, isCustomer, fetchCurrentFreight]);
 
-  const handleCancelFreight = () => {
-    console.log('Canceling freight:', id);
-  };
+  const handleCancelFreight = useCallback(() => {
+    if (!id) return;
+    dispatch(cancelFreight(id)).then(() => fetchCurrentFreight());
+  }, [dispatch, id, fetchCurrentFreight]);
+
+  const handleLeaveFreight = useCallback(() => {
+    if (!id) return;
+    dispatch(leaveFreight(id)).then(() => fetchCurrentFreight());
+  }, [dispatch, id, fetchCurrentFreight]);
+
+  const handleFinishFreight = useCallback(() => {
+    if (isCustomer || !id) return;
+    dispatch(finishFreight(id)).then(() => fetchCurrentFreight());
+  }, [dispatch, id, isCustomer, fetchCurrentFreight]);
+
+  const handleMarkAsVisited = useCallback(
+    (participantIndex: number, stopType: 'pickup' | 'delivery') => {
+      if (isTransporter || !id) return;
+      dispatch(
+        markStopAsVisited({
+          freightId: id,
+          participantIndex,
+          stopType,
+        })
+      ).then(() => fetchCurrentFreight());
+    },
+    [dispatch, id, isTransporter, fetchCurrentFreight]
+  );
 
   useEffect(() => {
-    if (id) dispatch(getFreightById(id));
-  }, [dispatch, id]);
+    fetchCurrentFreight();
+  }, [fetchCurrentFreight]);
 
   return {
     currentFreight,
     freightId: id,
     isLoading,
-    refetch: () => fetchCurrentFreight(),
+    isActionLoading,
+    refetch: fetchCurrentFreight,
+    // Actions
     handleTakeFreight,
-    handleJoinFreight,
+    handleStartFreight,
     handleCancelFreight,
+    handleLeaveFreight,
+    handleFinishFreight,
+    handleMarkAsVisited,
   };
 };

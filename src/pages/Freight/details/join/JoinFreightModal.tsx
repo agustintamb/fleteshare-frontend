@@ -12,15 +12,11 @@ interface JoinFreightModalProps {
   open: boolean;
   onClose: () => void;
   freight: IFreight;
+  refetch: () => void;
   onJoinSuccess?: () => void;
 }
 
-export const JoinFreightModal = ({
-  open,
-  onClose,
-  freight,
-  onJoinSuccess,
-}: JoinFreightModalProps) => {
+export const JoinFreightModal = ({ open, onClose, refetch, freight }: JoinFreightModalProps) => {
   const {
     currentStep,
     formData,
@@ -31,7 +27,7 @@ export const JoinFreightModal = ({
     submitJoinForm,
     isLoading,
     priceCalculation,
-  } = useJoinFreightFlow({ freight, onJoinSuccess });
+  } = useJoinFreightFlow({ freight, refetch });
 
   const { getCurrentStepValidation } = useFormValidation({
     currentStep,
@@ -41,13 +37,14 @@ export const JoinFreightModal = ({
   const currentStepValidation = getCurrentStepValidation();
 
   const handleNext = () => {
-    if (currentStepValidation.isValid) {
-      nextStep();
-    }
+    if (currentStepValidation.isValid) nextStep();
   };
 
   const handleJoinFreight = () => {
-    if (currentStepValidation.isValid) submitJoinForm();
+    if (currentStepValidation.isValid) {
+      submitJoinForm();
+      onClose();
+    }
   };
 
   const handleOnCancel = () => {
@@ -65,8 +62,6 @@ export const JoinFreightModal = ({
       freight,
       priceCalculation,
     };
-
-    console.log('Rendering step:', currentStep, stepProps);
 
     switch (currentStep) {
       case 'locations':

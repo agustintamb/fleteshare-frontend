@@ -1,6 +1,8 @@
 import { useState, useCallback } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '@/app/store';
 import { selectorFreigths } from '@/features/freights/slice';
+import { joinFreight } from '@/features/freights/asyncActions';
 import { emptyAddress } from '@/utils/constants';
 import { useAuth } from '@/hooks/useAuth';
 import { IFreight } from '@/interfaces/freight';
@@ -10,10 +12,11 @@ const steps: JoinFormStep[] = ['locations', 'package', 'review'];
 
 interface UseJoinFreightFlowProps {
   freight: IFreight;
-  onJoinSuccess?: () => void;
+  refetch: () => void;
 }
 
-export const useJoinFreightFlow = ({ freight, onJoinSuccess }: UseJoinFreightFlowProps) => {
+export const useJoinFreightFlow = ({ freight, refetch }: UseJoinFreightFlowProps) => {
+  const dispatch: AppDispatch = useDispatch();
   const { currentUser } = useAuth();
   const { priceCalculation, isLoadingJoin: isLoading } = useSelector(selectorFreigths);
 
@@ -53,22 +56,23 @@ export const useJoinFreightFlow = ({ freight, onJoinSuccess }: UseJoinFreightFlo
     }
   }, [currentStepIndex]);
 
-  const submitJoinForm = useCallback(async () => {
-    // Aquí iría la lógica de join al freight
-    // const joinData = {
-    //   freightId: freight._id,
-    //   pickupAddress: formData.pickup,
-    //   deliveryAddress: formData.delivery,
-    //   packageDimensions: {
-    //     length: formData.packageDetails.length,
-    //     width: formData.packageDetails.width,
-    //     height: formData.packageDetails.height,
-    //   },
-    // };
-
-    // await joinFreight(joinData);
-    onJoinSuccess?.();
-  }, [formData, freight._id, onJoinSuccess]);
+  const submitJoinForm = useCallback(() => {
+    const params = {
+      freightId: freight._id,
+      joinData: {
+        pickupAddress: formData.pickup,
+        deliveryAddress: formData.delivery,
+        packageDimensions: {
+          length: formData.packageDetails.length,
+          width: formData.packageDetails.width,
+          height: formData.packageDetails.height,
+        },
+      },
+    };
+    dispatch(joinFreight(params)).then(() => {
+      refetch();
+    });
+  }, [formData, freight._id]);
 
   return {
     currentStep,

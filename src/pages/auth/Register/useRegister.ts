@@ -5,6 +5,7 @@ import { AppDispatch } from '@/app/store';
 import { IRegisterParams } from '@/interfaces/auth';
 import { clearError, selectorAuth } from '@/features/auth/slice';
 import { register } from '@/features/auth/asyncActions';
+import { ROUTES } from '@/utils/constants';
 
 export const useRegister = () => {
   const navigate = useNavigate();
@@ -37,17 +38,16 @@ export const useRegister = () => {
           phone: values.phone,
           license: values.license,
         })
-      );
+      ).then(response => {
+        if (response.meta.requestStatus === 'fulfilled') navigate(ROUTES.DASHBOARD);
+      });
     } catch (err) {
       console.error('Error en registro:', err);
     }
   };
 
   useEffect(() => {
-    if (token) {
-      localStorage.setItem('token', token);
-      navigate('/');
-    }
+    if (token) localStorage.setItem('token', token);
   }, [token, navigate]);
 
   useEffect(() => {

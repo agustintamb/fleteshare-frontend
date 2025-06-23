@@ -11,7 +11,10 @@ export const useAuth = () => {
 
   const isCustomer = currentUser?.role === 'customer';
   const isTransporter = currentUser?.role === 'transporter';
+
   const isProfileCompleted = currentUser?.isProfileCompleted;
+  const isProfileValidated =
+    (isTransporter && currentUser?.licenseStatus === 'approved') || isCustomer;
 
   const handleLogout = () => {
     removeToken();
@@ -27,6 +30,7 @@ export const useAuth = () => {
     isCustomer,
     isTransporter,
     isProfileCompleted,
+    isProfileValidated,
     handleLogout,
   };
 };

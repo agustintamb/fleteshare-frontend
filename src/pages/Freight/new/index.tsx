@@ -3,6 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
+import { ValidationBanner } from '@/components/ValidationBanner';
+import { DisabledWrapper } from '@/components/DisabledWrapper';
 import { toast } from 'react-toastify';
 import Card from '@/components/ui/Card';
 
@@ -92,25 +94,30 @@ const NewFreightRequest = () => {
         <h1 className="text-2xl font-bold text-gray-900">Solicitar Nuevo Flete</h1>
       </div>
 
+      {/* Banner de validación */}
+      <ValidationBanner />
+
       {/* Progress Indicator */}
       <ProgressIndicator currentStep={currentStep} />
 
       {/* Main Content */}
-      <Card className="p-4 sm:p-6" allowOverflow>
-        {renderCurrentStep()}
+      <DisabledWrapper>
+        <Card className="p-4 sm:p-6" allowOverflow>
+          {renderCurrentStep()}
 
-        {/* Navigation Buttons */}
-        <NavigationButtons
-          currentStep={currentStep}
-          isValid={
-            currentStepValidation.isValid && (currentStep !== 'review' || !!priceCalculation)
-          }
-          isLoading={isLoading}
-          onNext={handleNext}
-          onPrev={prevStep}
-          onSubmit={handleSubmit}
-        />
-      </Card>
+          {/* Navigation Buttons */}
+          <NavigationButtons
+            currentStep={currentStep}
+            isValid={
+              currentStepValidation.isValid && (currentStep !== 'review' || !!priceCalculation)
+            }
+            isLoading={isLoading}
+            onNext={handleNext}
+            onPrev={prevStep}
+            onSubmit={handleSubmit}
+          />
+        </Card>
+      </DisabledWrapper>
     </div>
   );
 };

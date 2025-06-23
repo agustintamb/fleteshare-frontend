@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { RootState } from '@/app/store';
 import { createSlice } from '@reduxjs/toolkit';
 import { IBaseSlice } from '@/interfaces/redux';
@@ -6,31 +7,50 @@ import { IFreight, IFreightsWithPagination, PriceCalculation } from '@/interface
 import {
   calculatePrice,
   createFreight,
-  //joinFreight,
-  //validateJoinFreight,
+  joinFreight,
   getUserFreights,
   getFreightById,
-  //updateFreightStatus,
   takeFreight,
+  leaveFreight,
+  cancelFreight,
+  updateFreightStatus,
+  markStopAsVisited,
   getFreights,
+  finishFreight,
+  getFreightRoute,
+  getFreightProgress,
+  checkStopPermissions,
+  startFreight,
 } from './asyncActions';
 
 interface initialStateProps extends IBaseSlice {
-  isLoadingUserFreights?: boolean;
-  priceCalculation?: PriceCalculation | null;
-  allFreights?: IFreightsWithPagination | null;
-  userFreights?: IFreightsWithPagination | null;
-  currentFreight?: IFreight | null;
+  isLoadingUserFreights: boolean;
+  isLoadingPriceCalculation: boolean;
+  isLoadingJoin: boolean;
+  isActionLoading: boolean;
+  priceCalculation: PriceCalculation | null;
+  allFreights: IFreightsWithPagination | null;
+  userFreights: IFreightsWithPagination | null;
+  currentFreight: IFreight | null;
+  freightRoute: any;
+  freightProgress: any;
+  stopPermissions: any;
 }
 
 const initialState: initialStateProps = {
   error: null,
   isLoading: false,
   isLoadingUserFreights: false,
+  isLoadingPriceCalculation: false,
+  isLoadingJoin: false,
+  isActionLoading: false,
   priceCalculation: null,
   allFreights: null,
   userFreights: null,
   currentFreight: null,
+  freightRoute: null,
+  freightProgress: null,
+  stopPermissions: null,
 };
 
 export const freightsSlice = createSlice({
@@ -44,15 +64,15 @@ export const freightsSlice = createSlice({
   extraReducers: builder => {
     // calculatePrice
     builder.addCase(calculatePrice.pending, state => {
-      state.isLoading = true;
+      state.isLoadingPriceCalculation = true;
       state.error = null;
     });
     builder.addCase(calculatePrice.fulfilled, (state, action) => {
-      state.isLoading = false;
+      state.isLoadingPriceCalculation = false;
       state.priceCalculation = action.payload.result;
     });
     builder.addCase(calculatePrice.rejected, (state, action) => {
-      state.isLoading = false;
+      state.isLoadingPriceCalculation = false;
       state.error = errorMessage(action.payload);
     });
 
@@ -63,7 +83,6 @@ export const freightsSlice = createSlice({
     });
     builder.addCase(createFreight.fulfilled, (state, action) => {
       state.isLoading = false;
-      if (state.userFreights) state.userFreights.freights.push(action.payload.result);
       state.currentFreight = action.payload.result;
       state.priceCalculation = null; // Clear price calculation after creating freight
       state.error = null; // Clear any previous error
@@ -115,71 +134,151 @@ export const freightsSlice = createSlice({
       state.error = errorMessage(action.payload);
     });
 
-    //// joinFreight
-    //builder.addCase(joinFreight.pending, state => {
-    //  state.isLoading = true;
-    //  state.error = null;
-    //});
-    //builder.addCase(joinFreight.fulfilled, (state, action) => {
-    //  state.isLoading = false;
-    //  if (state.userFreights) {
-    //    state.userFreights.push(action.payload);
-    //  }
-    //});
-    //builder.addCase(joinFreight.rejected, (state, action) => {
-    //  state.isLoading = false;
-    //  state.error = errorMessage(action.payload);
-    //});
-
-    //// validateJoinFreight
-    //builder.addCase(validateJoinFreight.pending, state => {
-    //  state.isLoading = true;
-    //  state.error = null;
-    //});
-    //builder.addCase(validateJoinFreight.fulfilled, (state, action) => {
-    //  state.isLoading = false;
-    //  // Add validation result to state if needed
-    //});
-    //builder.addCase(validateJoinFreight.rejected, (state, action) => {
-    //  state.isLoading = false;
-    //  state.error = errorMessage(action.payload);
-    //});
-
-    //// updateFreightStatus
-    //builder.addCase(updateFreightStatus.pending, state => {
-    //  state.isLoading = true;
-    //  state.error = null;
-    //});
-    //builder.addCase(updateFreightStatus.fulfilled, (state, action) => {
-    //  state.isLoading = false;
-    //  // Update freight in relevant arrays
-    //  if (state.userFreights) {
-    //    const index = state.userFreights.findIndex(f => f.id === action.payload.id);
-    //    if (index !== -1) {
-    //      state.userFreights[index] = action.payload;
-    //    }
-    //  }
-    //  if (state.currentFreight?.id === action.payload.id) {
-    //    state.currentFreight = action.payload;
-    //  }
-    //});
-    //builder.addCase(updateFreightStatus.rejected, (state, action) => {
-    //  state.isLoading = false;
-    //  state.error = errorMessage(action.payload);
-    //});
+    // joinFreight
+    builder.addCase(joinFreight.pending, state => {
+      state.isLoadingJoin = true;
+      state.error = null;
+    });
+    builder.addCase(joinFreight.fulfilled, state => {
+      state.isLoadingJoin = false;
+    });
+    builder.addCase(joinFreight.rejected, (state, action) => {
+      state.isLoadingJoin = false;
+      state.error = errorMessage(action.payload);
+    });
 
     // takeFreight
     builder.addCase(takeFreight.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(takeFreight.fulfilled, state => {
+      state.isActionLoading = false;
+    });
+    builder.addCase(takeFreight.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // startFreight
+    builder.addCase(startFreight.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(startFreight.fulfilled, state => {
+      state.isActionLoading = false;
+    });
+    builder.addCase(startFreight.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // leaveFreight
+    builder.addCase(leaveFreight.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(leaveFreight.fulfilled, state => {
+      state.isActionLoading = false;
+    });
+    builder.addCase(leaveFreight.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // cancelFreight
+    builder.addCase(cancelFreight.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(cancelFreight.fulfilled, state => {
+      state.isActionLoading = false;
+    });
+    builder.addCase(cancelFreight.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // finishFreight
+    builder.addCase(finishFreight.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(finishFreight.fulfilled, (state, action) => {
+      state.isActionLoading = false;
+      state.currentFreight = action.payload.result;
+    });
+    builder.addCase(finishFreight.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // updateFreightStatus
+    builder.addCase(updateFreightStatus.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(updateFreightStatus.fulfilled, (state, action) => {
+      state.isActionLoading = false;
+      state.currentFreight = action.payload.result;
+    });
+    builder.addCase(updateFreightStatus.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // getFreightRoute
+    builder.addCase(getFreightRoute.pending, state => {
       state.isLoading = true;
       state.error = null;
     });
-    builder.addCase(takeFreight.fulfilled, (state, action) => {
+    builder.addCase(getFreightRoute.fulfilled, (state, action) => {
       state.isLoading = false;
-      if (state.userFreights) {
-        state.userFreights.freights.push(action.payload.result);
-      }
+      state.freightRoute = action.payload.result;
     });
-    builder.addCase(takeFreight.rejected, (state, action) => {
+    builder.addCase(getFreightRoute.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // getFreightProgress
+    builder.addCase(getFreightProgress.pending, state => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(getFreightProgress.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.freightProgress = action.payload.result;
+    });
+    builder.addCase(getFreightProgress.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // markStopAsVisited
+    builder.addCase(markStopAsVisited.pending, state => {
+      state.isActionLoading = true;
+      state.error = null;
+    });
+    builder.addCase(markStopAsVisited.fulfilled, (state, action) => {
+      state.isActionLoading = false;
+      state.currentFreight = action.payload.result;
+    });
+    builder.addCase(markStopAsVisited.rejected, (state, action) => {
+      state.isActionLoading = false;
+      state.error = errorMessage(action.payload);
+    });
+
+    // checkStopPermissions
+    builder.addCase(checkStopPermissions.pending, state => {
+      state.isLoading = true;
+      state.error = null;
+    });
+    builder.addCase(checkStopPermissions.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.stopPermissions = action.payload.result;
+    });
+    builder.addCase(checkStopPermissions.rejected, (state, action) => {
       state.isLoading = false;
       state.error = errorMessage(action.payload);
     });

@@ -12,7 +12,7 @@ interface CustomerMetricsProps {
 export const CustomerMetrics = ({ userFreights, allFreights }: CustomerMetricsProps) => {
   const totalFreights = userFreights.length;
   const activeFreights = userFreights.filter(freight =>
-    ['requested', 'taken', 'started', 'going'].includes(freight.status)
+    ['requested', 'taken', 'started'].includes(freight.status)
   ).length;
 
   // Get upcoming freights

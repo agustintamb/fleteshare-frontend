@@ -1,13 +1,13 @@
 import { motion } from 'framer-motion';
-import { AlertCircle } from 'lucide-react';
+import { AlertCircle, Package } from 'lucide-react';
 import Input from '@/components/ui/Input';
-import { FormStepProps } from '../../types';
+import { JoinFormStepProps } from '../types';
 import { usePackageStep } from './usePackageStep';
-import PriceCalculation from './components/PriceCalculation';
+import PriceCalculation from '../components/PriceCalculation';
 
-type PackageStepProps = Omit<FormStepProps, 'isValid'>;
+type PackageStepProps = Omit<JoinFormStepProps, 'isValid'>;
 
-const PackageStep = ({ formData, updateFormData }: PackageStepProps) => {
+const PackageStep = ({ formData, updateFormData, freight }: PackageStepProps) => {
   const {
     packageDetails,
     updatePackageDetails,
@@ -15,7 +15,10 @@ const PackageStep = ({ formData, updateFormData }: PackageStepProps) => {
     priceCalculation,
     isCalculatingPrice,
     volumeM3,
-  } = usePackageStep({ formData, updateFormData });
+    availableSpace,
+    vehicleAssigned,
+    excededSpace,
+  } = usePackageStep({ formData, updateFormData, freight });
 
   return (
     <motion.div
@@ -24,7 +27,28 @@ const PackageStep = ({ formData, updateFormData }: PackageStepProps) => {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.3 }}
     >
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">Detalles del Paquete</h2>
+      <h3 className="text-lg font-semibold text-gray-900 mb-3">Detalles del Paquete</h3>
+
+      {/* Info del espacio disponible */}
+      {vehicleAssigned && (
+        <div className={`p-4 rounded-lg mb-4 ${excededSpace ? 'bg-red-50' : 'bg-green-50'}`}>
+          <div className="flex items-center gap-2 mb-2">
+            <Package size={18} className={excededSpace ? 'text-red-600' : 'text-green-600'} />
+            <h4 className={`font-medium ${excededSpace ? 'text-red-900' : 'text-green-900'}`}>
+              {excededSpace ? 'Espacio Insuficiente' : 'Espacio Disponible en el Flete'}
+            </h4>
+          </div>
+          <p className={`text-sm ${excededSpace ? 'text-red-700' : 'text-green-700'}`}>
+            <strong>{availableSpace} m³</strong> disponibles de{' '}
+            <strong>{freight.usedVolumeM3 + availableSpace} m³</strong> totales
+          </p>
+          {excededSpace && (
+            <p className="text-sm text-red-700 mt-2">
+              ⚠️ Tu paquete ({volumeM3} m³) excede el espacio disponible
+            </p>
+          )}
+        </div>
+      )}
 
       <div className="space-y-6">
         <div className="grid grid-cols-3 gap-4">
@@ -72,7 +96,7 @@ const PackageStep = ({ formData, updateFormData }: PackageStepProps) => {
         {volumeM3 > 0 && (
           <div className="bg-gray-50 p-3 rounded-md">
             <p className="text-sm text-gray-700">
-              <strong>Volumen calculado en metros cúbicos (m³):</strong> {volumeM3}
+              <strong>Volumen calculado:</strong> {volumeM3} m³
             </p>
           </div>
         )}
@@ -92,7 +116,7 @@ const PackageStep = ({ formData, updateFormData }: PackageStepProps) => {
               <div>
                 <h4 className="text-sm font-medium text-red-800 mb-1">Errores de validación</h4>
                 <ul className="text-sm text-red-700 space-y-1">
-                  {validation.errors.map((error, index) => (
+                  {validation.errors.map((error: string, index: number) => (
                     <li key={index}>• {error}</li>
                   ))}
                 </ul>

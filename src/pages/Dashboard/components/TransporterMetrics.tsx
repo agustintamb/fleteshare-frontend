@@ -12,7 +12,7 @@ interface TransporterMetricsProps {
 export const TransporterMetrics = ({ userFreights, allFreights }: TransporterMetricsProps) => {
   const totalFreights = userFreights.length;
   const activeFreights = userFreights.filter(freight =>
-    ['taken', 'started', 'going'].includes(freight.status)
+    ['taken', 'started'].includes(freight.status)
   ).length;
 
   // Get freights this week
@@ -70,9 +70,7 @@ export const TransporterMetrics = ({ userFreights, allFreights }: TransporterMet
           </div>
           <div>
             <div className="text-2xl font-bold text-purple-900">{freightsThisWeek}</div>
-            <div className="text-sm text-purple-700">
-              {freightsThisWeek === 1 ? 'Hay para esta semana' : 'Hay para esta semana'}
-            </div>
+            <div className="text-sm text-purple-700">para esta semana</div>
           </div>
         </div>
       </div>

@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import ServiceBase from '@/service/ServiceBase';
 import { IApiResponse } from '@/interfaces/api';
-import { IAddress, ICoordinates } from '@/interfaces/address';
+import { ICoordinates } from '@/interfaces/address';
 import {
   CreateFreightRequest,
   JoinFreightRequest,
@@ -30,16 +30,6 @@ class FreightsService extends ServiceBase {
   ): Promise<AxiosResponse<FreightDetailResponse>> =>
     this.client.post(`freights/${freightId}/join`, joinData);
 
-  validateJoinFreight = (
-    freightId: string,
-    data: {
-      pickupAddress: IAddress;
-      deliveryAddress: IAddress;
-      packageDimensions: Omit<IPackageDimensions, 'volumeM3'>;
-    }
-  ): Promise<AxiosResponse<IApiResponse>> =>
-    this.client.post(`freights/${freightId}/validate-join`, data);
-
   getUserFreights = (query?: GetUserFreightsQuery): Promise<AxiosResponse<FreightListResponse>> => {
     const params = new URLSearchParams();
     if (query)
@@ -53,16 +43,6 @@ class FreightsService extends ServiceBase {
   getFreightById = (freightId: string): Promise<AxiosResponse<FreightDetailResponse>> =>
     this.client.get(`freights/${freightId}`);
 
-  updateFreightStatus = (
-    freightId: string,
-    data: {
-      status: string;
-      cancellationReason?: string;
-    }
-  ): Promise<AxiosResponse<FreightDetailResponse>> => {
-    return this.client.patch(`freights/${freightId}/status`, data);
-  };
-
   getFreights = (query?: GetFreightsQuery): Promise<AxiosResponse<FreightListResponse>> => {
     const params = new URLSearchParams();
     if (query)
@@ -75,6 +55,39 @@ class FreightsService extends ServiceBase {
 
   takeFreight = (freightId: string): Promise<AxiosResponse<FreightDetailResponse>> =>
     this.client.post(`freights/${freightId}/take`, {});
+
+  startFreight = (freightId: string): Promise<AxiosResponse<FreightDetailResponse>> =>
+    this.client.post(`freights/${freightId}/start`, {});
+
+  leaveFreight = (freightId: string): Promise<AxiosResponse<FreightDetailResponse>> =>
+    this.client.post(`freights/${freightId}/leave`, {});
+
+  cancelFreight = (freightId: string): Promise<AxiosResponse<FreightDetailResponse>> =>
+    this.client.post(`freights/${freightId}/cancel`, {});
+
+  finishFreight = (freightId: string): Promise<AxiosResponse<FreightDetailResponse>> =>
+    this.client.post(`freights/${freightId}/finish`, {});
+
+  updateFreightStatus = (
+    freightId: string,
+    statusData: { status: string }
+  ): Promise<AxiosResponse<FreightDetailResponse>> =>
+    this.client.patch(`freights/${freightId}/status`, statusData);
+
+  getFreightRoute = (freightId: string): Promise<AxiosResponse<IApiResponse>> =>
+    this.client.get(`freights/${freightId}/route`);
+
+  getFreightProgress = (freightId: string): Promise<AxiosResponse<IApiResponse>> =>
+    this.client.get(`freights/${freightId}/progress`);
+
+  markStopAsVisited = (
+    freightId: string,
+    data: { participantIndex: number; stopType: 'pickup' | 'delivery' }
+  ): Promise<AxiosResponse<IApiResponse>> =>
+    this.client.post(`/freights/${freightId}/mark-visited`, data);
+
+  checkStopPermissions = (freightId: string): Promise<AxiosResponse<IApiResponse>> =>
+    this.client.get(`freights/${freightId}/check-permissions`);
 }
 
 export default new FreightsService();

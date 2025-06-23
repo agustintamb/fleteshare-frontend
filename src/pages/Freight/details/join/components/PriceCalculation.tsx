@@ -8,10 +8,9 @@ interface PriceCalculationProps {
 
 const PriceCalculation = ({ priceCalculation, isCalculating }: PriceCalculationProps) => {
   if (!isCalculating && !priceCalculation) return null;
-
   return (
     <div className="mt-6 p-4 bg-gray-50 rounded-md">
-      <h4 className="font-medium text-gray-900 mb-3">Estimación de Precio</h4>
+      <h4 className="font-medium text-gray-900 mb-3">Estimación de Tu Precio</h4>
 
       {isCalculating ? (
         <div className="flex items-center">
@@ -35,11 +34,11 @@ const PriceCalculation = ({ priceCalculation, isCalculating }: PriceCalculationP
             <span className="font-medium text-green-600">{formatARS(null)}</span>
           </div>
           <div className="flex justify-between text-lg font-bold text-primary-600 pt-2 border-t border-gray-200">
-            <span>Total Estimado:</span>
+            <span>Tu Precio Estimado:</span>
             <span>{formatARS(priceCalculation.totalPrice)}</span>
           </div>
           <p className="text-xs text-gray-500 mt-2">
-            * El precio de puede variar al momento de confirmar el flete.
+            * El precio puede variar al momento de confirmarte la asignación del flete.
           </p>
         </div>
       ) : null}

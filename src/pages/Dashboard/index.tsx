@@ -19,7 +19,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Hola {currentUser?.firstName}!</h1>
             <p className="text-gray-600 mt-1">
-              {isCustomer && '¿Necesitas enviar algo hoy?'}
+              {isCustomer && '¿Necesitás enviar algo hoy?'}
               {isTransporter && '¿Listo para aceptar nuevos fletes?'}
             </p>
           </div>

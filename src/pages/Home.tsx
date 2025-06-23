@@ -57,7 +57,7 @@ const Home = ({ authModal }: IHomeProps) => {
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
                   <>
-                    <Link to={isAuthenticated ? '/dashboard' : '/iniciar-sesion'}>
+                    <Link to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN}>
                       <Button size="lg" variant="primary" icon={<Truck size={20} />}>
                         Comenzar ahora
                       </Button>
@@ -361,7 +361,7 @@ const Home = ({ authModal }: IHomeProps) => {
                 FleteShare tiene la solución para vos.
               </p>
               <div className="flex flex-col sm:flex-row justify-center gap-4">
-                <Link to={ROUTES.DASHBOARD}>
+                <Link to={isAuthenticated ? ROUTES.DASHBOARD : ROUTES.LOGIN}>
                   <Button size="lg" variant="secondary">
                     Ir a mi Dashboard
                   </Button>

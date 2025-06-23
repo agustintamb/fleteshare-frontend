@@ -110,7 +110,7 @@ export const CustomerActions = ({
           )}
 
           {/* Botón de cancelar (para creadores o únicos participantes) */}
-          {canCancelOrLeave && (isCreator || isOnlyParticipant) && (
+          {canCancelOrLeave && isCreator && isOnlyParticipant && (
             <Button variant="danger" size="lg" onClick={onCancelFreight} disabled={isActionLoading}>
               Cancelar flete
             </Button>
